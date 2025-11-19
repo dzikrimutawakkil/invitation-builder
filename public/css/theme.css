@@ -34,3 +34,37 @@ p {
     line-height: 1.6; 
     color: #555; 
 }
+
+/* --- HEADER STYLE 2: MODERN --- */
+.hero-modern {
+    background-color: #2c3e50;
+    color: white;
+    text-align: center;
+    padding: 50px 20px;
+}
+.hero-title-modern {
+    font-family: 'Lato', sans-serif;
+    letter-spacing: 5px;
+    font-size: 2.5em;
+    margin: 0;
+}
+.modern-line {
+    width: 50px; height: 4px; background: #e74c3c;
+    margin: 20px auto;
+}
+
+/* --- HEADER STYLE 3: ELEGANT --- */
+.hero-elegant {
+    background-color: #fff;
+    border: 2px solid #d4af37; /* Gold Border */
+    padding: 40px;
+    margin: 10px;
+    text-align: center;
+}
+.hero-title-script {
+    font-family: 'Georgia', serif;
+    font-style: italic;
+    color: #d4af37;
+    font-size: 2.8em;
+}
+.and { font-size: 0.5em; vertical-align: middle; color: #333; }

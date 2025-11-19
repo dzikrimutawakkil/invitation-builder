@@ -50,3 +50,57 @@ h3 { color: #ecf0f1; border-bottom: 1px solid #34495e; padding-bottom: 10px; mar
 .block { position: relative; transition: 0.2s; }
 .block:hover { outline: 2px dashed #e67e22; cursor: pointer; }
 .block:focus { outline: 2px solid #3498db; }
+
+/* --- MODAL POPUP STYLES --- */
+.modal-overlay {
+    display: none; /* Hidden by default */
+    position: fixed; z-index: 100; left: 0; top: 0;
+    width: 100%; height: 100%;
+    background-color: rgba(0,0,0,0.6); /* Black semi-transparent */
+    justify-content: center; align-items: center;
+}
+
+.modal-content {
+    background-color: white;
+    width: 80%; max-width: 600px;
+    border-radius: 10px; padding: 20px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+    animation: slideDown 0.3s ease;
+}
+
+.modal-header {
+    display: flex; justify-content: space-between; align-items: center;
+    border-bottom: 1px solid #eee; padding-bottom: 10px; margin-bottom: 20px;
+}
+
+.template-grid {
+    display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    gap: 15px;
+}
+
+/* Thumbnail Cards */
+.template-card {
+    border: 1px solid #ddd; border-radius: 8px;
+    cursor: pointer; overflow: hidden; transition: 0.2s;
+    text-align: center;
+}
+.template-card:hover {
+    border-color: #6a0dad; transform: scale(1.03);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+
+/* Mini Preview inside the card */
+.preview-box {
+    height: 100px; overflow: hidden;
+    transform: scale(0.5); transform-origin: top center; /* Shrink it to fit */
+    width: 200%; /* Double width to counteract scale */
+    pointer-events: none; /* Prevent editing inside the thumbnail */
+}
+
+.close-btn { font-size: 28px; cursor: pointer; color: #aaa; }
+.close-btn:hover { color: #333; }
+
+@keyframes slideDown {
+    from { opacity: 0; transform: translateY(-20px); }
+    to { opacity: 1; transform: translateY(0); }
+}

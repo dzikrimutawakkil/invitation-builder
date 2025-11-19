@@ -9,14 +9,12 @@
 
     <div class="sidebar">
         <h3>💍 Invitation Builder</h3>
-        
         <div class="section-title">Structure</div>
-        <button class="tool-btn" onclick="addBlock('hero')">Header (Couple Names)</button>
-        <button class="tool-btn" onclick="addBlock('text')">Text Paragraph</button>
-        <button class="tool-btn" onclick="addBlock('details')">Date & Location</button>
         
-        <div class="section-title">Personalization</div>
-        <button class="tool-btn special-btn" onclick="addBlock('guest')">✨ Add "Dear Guest"</button>
+        <button class="tool-btn" onclick="openTemplateSelector('hero')">Header Styles</button>
+        <button class="tool-btn" onclick="openTemplateSelector('text')">Text Paragraphs</button>
+        
+        <button class="tool-btn" onclick="addBlockToCanvas(templates.details.classic)">Date & Location</button>
 
         <button class="tool-btn save-btn" onclick="saveDesign()">Save Design</button>
     </div>
@@ -26,6 +24,17 @@
             <div style="padding:20px; text-align:center; color:#999; margin-top:50%;">
                 Add blocks from the left to start building...
             </div>
+        </div>
+    </div>
+
+    <div id="templateModal" class="modal-overlay">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Choose a Style</h2>
+                <span class="close-btn" onclick="closeModal()">&times;</span>
+            </div>
+            <div id="templateGrid" class="template-grid">
+                </div>
         </div>
     </div>
 
