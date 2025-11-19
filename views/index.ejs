@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title><%= title %></title>
+<!-- We are using custom CSS here for a simple, mobile-friendly design -->
+<style>
+body { font-family: 'Arial', sans-serif; background-color: #f8f8f8; padding: 20px; color: #333; }
+.container { max-width: 600px; margin: 0 auto; background: white; padding: 30px; border-radius: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
+h1 { text-align: center; color: #6a0dad; margin-bottom: 25px; }
+.form-group { margin-bottom: 20px; }
+label { display: block; margin-bottom: 8px; font-weight: bold; }
+input[type="text"], input[type="date"], textarea {
+width: 100%;
+padding: 10px;
+border: 1px solid #ccc;
+border-radius: 6px;
+box-sizing: border-box; /* Important for padding/border calculation */
+}
+textarea { resize: vertical; min-height: 100px; }
+button {
+width: 100%;
+padding: 12px;
+background-color: #6a0dad;
+color: white;
+border: none;
+border-radius: 8px;
+cursor: pointer;
+font-size: 1.1em;
+transition: background-color 0.3s;
+}
+button:hover { background-color: #510787; }
+</style>
+</head>
+<body>
+<div class="container">
+<h1>Digital Invitation Builder</h1>
+<form action="/create-invite" method="POST">
+
+        <div class="form-group">
+            <label for="inviteeName">Invited Person's Name:</label>
+            <input type="text" id="inviteeName" name="inviteeName" required>
+        </div>
+        
+        <div class="form-group">
+            <label for="eventName">Event Name:</label>
+            <input type="text" id="eventName" name="eventName" value="Wedding Reception" required>
+        </div>
+        
+        <div class="form-group">
+            <label for="eventDate">Date:</label>
+            <input type="date" id="eventDate" name="eventDate" required>
+        </div>
+        
+        <div class="form-group">
+            <label for="eventTime">Time:</label>
+            <input type="text" id="eventTime" name="eventTime" value="7:00 PM" required>
+        </div>
+        
+        <div class="form-group">
+            <label for="eventVenue">Venue:</label>
+            <input type="text" id="eventVenue" name="eventVenue" required>
+        </div>
+        
+        <div class="form-group">
+            <label for="message">Personal Message:</label>
+            <textarea id="message" name="message" required>We can't wait to celebrate with you!</textarea>
+        </div>
+
+        <button type="submit">Create Your Invitation</button>
+    </form>
+</div>
+
+
+</body>
+</html>

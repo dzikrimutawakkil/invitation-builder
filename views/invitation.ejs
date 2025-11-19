@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title><%= title %></title>
+<!-- Custom styling for the invitation card look -->
+<style>
+body {
+font-family: 'Georgia', serif;
+background-color: #e6e6fa; /* Light Lavender Background /
+color: #333;
+padding: 20px;
+text-align: center;
+}
+.invitation-card {
+max-width: 450px;
+margin: 40px auto;
+background: white;
+padding: 40px;
+border-radius: 15px;
+box-shadow: 0 10px 20px rgba(0,0,0,0.15);
+border: 5px solid #6a0dad; / Purple Border /
+}
+h1 {
+color: #6a0dad;
+font-size: 2.2em;
+margin-bottom: 10px;
+border-bottom: 2px solid #ccc;
+padding-bottom: 10px;
+}
+h2 {
+font-size: 1.5em;
+color: #4b0082; / Indigo /
+margin-top: 0;
+}
+p { margin-bottom: 15px; line-height: 1.6; }
+.detail {
+font-weight: bold;
+color: #6a0dad;
+}
+.guest-name {
+font-size: 1.8em;
+margin: 20px 0;
+color: #c71585; / Medium Violet Red /
+}
+.message-box {
+margin-top: 30px;
+padding: 15px;
+background-color: #f0f8ff; / Alice Blue */
+border-radius: 8px;
+font-style: italic;
+}
+</style>
+</head>
+<body>
+<div class="invitation-card">
+<h1>You're Invited!</h1>
+
+    <h2><%= eventName %></h2>
+    
+    <p class="guest-name">For: <span class="detail"><%= inviteeName %></span></p>
+
+    <p>
+        <span class="detail">Date:</span> <%= eventDate %><br>
+        <span class="detail">Time:</span> <%= eventTime %><br>
+        <span class="detail">Location:</span> <%= eventVenue %>
+    </p>
+    
+    <div class="message-box">
+        <p>"<%= message %>"</p>
+    </div>
+
+    <p style="margin-top: 30px; font-size: 0.9em; color: #888;">We look forward to seeing you there.</p>
+</div>
+
+
+</body>
+</html>
