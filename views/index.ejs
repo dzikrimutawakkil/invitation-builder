@@ -27,14 +27,65 @@
         </div>
     </div>
 
+    <div class="properties-panel" id="propertiesPanel">
+        <h3>🎨 Edit Style</h3>
+        <p class="hint-text">Click a block to edit properties</p>
+        
+        <div id="styleControls" style="display:none;">
+            <div class="control-group">
+                <label>Text Color</label>
+                <div class="color-input-wrapper">
+                    <input type="color" id="colorInput">
+                    <span id="colorValue">#000000</span>
+                </div>
+            </div>
+
+            <div class="control-group">
+                <label>Background</label>
+                <div class="color-input-wrapper">
+                    <input type="color" id="bgColorInput">
+                    <span id="bgColorValue">#ffffff</span>
+                </div>
+            </div>
+
+            <div class="control-group">
+                <label>Padding (Space)</label>
+                <input type="range" id="paddingInput" min="0" max="60" value="20">
+            </div>
+
+            <div class="control-group">
+                <label>Alignment</label>
+                <div class="btn-group">
+                    <button class="align-btn" data-align="left">L</button>
+                    <button class="align-btn" data-align="center">C</button>
+                    <button class="align-btn" data-align="right">R</button>
+                </div>
+            </div>
+
+            <div class="control-group">
+                <label>Font Size</label>
+                <select id="fontSizeInput">
+                    <option value="16px">Small</option>
+                    <option value="18px">Normal</option>
+                    <option value="24px">Medium</option>
+                    <option value="32px">Large</option>
+                    <option value="48px">Huge</option>
+                </select>
+            </div>
+            
+            <div class="control-group" style="margin-top: 20px; border-top: 1px solid #444; padding-top: 10px;">
+                <button class="tool-btn delete-btn" id="deleteBlockBtn">🗑️ Delete Block</button>
+            </div>
+        </div>
+    </div>
+
     <div id="templateModal" class="modal-overlay">
         <div class="modal-content">
             <div class="modal-header">
                 <h2>Choose a Style</h2>
                 <span class="close-btn" onclick="closeModal()">&times;</span>
             </div>
-            <div id="templateGrid" class="template-grid">
-                </div>
+            <div id="templateGrid" class="template-grid"></div>
         </div>
     </div>
 

@@ -1,37 +1,70 @@
 export default class CanvasManager {
     constructor(canvasId) {
         this.canvas = document.getElementById(canvasId);
+        this.onSelectionChange = null; // Callback function
     }
 
     /**
-     * Clear placeholder text if it exists
+     * Set a function to call when a block is clicked
      */
+    setSelectionListener(callback) {
+        this.onSelectionChange = callback;
+    }
+
     cleanCanvas() {
         if (this.canvas.innerText.includes('Add blocks from')) {
             this.canvas.innerHTML = '';
         }
     }
 
-    /**
-     * Add a new block of HTML to the canvas
-     */
     addBlock(htmlContent) {
         this.cleanCanvas();
 
         const el = document.createElement('div');
         el.className = 'block';
-        el.contentEditable = "true"; // Make it editable
+        el.contentEditable = "true"; 
         el.innerHTML = htmlContent;
+
+        // EVENT LISTENER: When clicked/focused, select this block
+        el.onclick = (e) => {
+            e.stopPropagation(); // Prevent clicking background
+            this.selectBlock(el);
+        };
 
         this.canvas.appendChild(el);
         
-        // Removed el.scrollIntoView() to prevent buggy jumping
+        // Auto-select the new block
+        this.selectBlock(el);
+    }
+
+    selectBlock(el) {
+        // 1. Remove 'selected' class from old blocks
+        document.querySelectorAll('.block.selected').forEach(b => b.classList.remove('selected'));
+        
+        // 2. Add 'selected' class to new block
+        el.classList.add('selected');
+
+        // 3. Notify UIManager
+        if (this.onSelectionChange) {
+            this.onSelectionChange(el);
+        }
     }
 
     /**
-     * Get the final HTML string to save
+     * Helper to delete the currently selected block
      */
+    deleteSelected() {
+        const selected = this.canvas.querySelector('.block.selected');
+        if (selected) selected.remove();
+    }
+
     getDesignHtml() {
-        return this.canvas.innerHTML;
+        // Clean selection classes before saving so they don't show up in the final invite
+        const clone = this.canvas.cloneNode(true);
+        clone.querySelectorAll('.block').forEach(b => {
+            b.classList.remove('selected');
+            b.removeAttribute('contenteditable'); // Clean up editable attribute
+        });
+        return clone.innerHTML;
     }
 }
