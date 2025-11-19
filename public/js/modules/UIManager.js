@@ -36,11 +36,11 @@ export default class UIManager {
         this.closeBtn.onclick = () => this.closeModal();
         window.onclick = (e) => { if (e.target == this.modal) this.closeModal(); };
 
-        // --- SELECTION LISTENER (The Magic Part) ---
+        // --- SELECTION LISTENER ---
         this.canvas.setSelectionListener((block, element) => {
             this.selectedBlock = block;
             this.selectedElement = element;
-            this.updatePanelValues(); // Switch the sidebar tools!
+            this.updatePanelValues(); 
         });
 
         // --- IMAGE LOGIC ---
@@ -96,40 +96,50 @@ export default class UIManager {
             if (this.selectedBlock) this.selectedBlock.style.padding = e.target.value + 'px';
         };
 
+        // 🟢 FIXED DELETE LOGIC HERE 🟢
         this.deleteBtn.onclick = () => {
             if (confirm("Delete this block?")) {
                 this.canvas.deleteSelected();
-                this.panel.style.display = 'none';
+                
+                // 1. Reset Selection
+                this.selectedBlock = null;
+                this.selectedElement = null;
+
+                // 2. Hide the CONTROLS, but NOT the PANEL
+                this.imageControls.style.display = 'none';
+                this.textControls.style.display = 'none';
+                
+                // 3. Ensure panel stays visible (it's a flex container in CSS)
+                // We don't set display='none' on this.panel anymore!
             }
         };
     }
 
-    /**
-     * Decides whether to show Image Controls or Text Controls
-     */
     updatePanelValues() {
+        // Ensure panel is visible (useful if it was hidden initially)
+        // Note: In CSS it is 'display: flex', so we don't want to overwrite that with 'block' if possible, 
+        // but forcing it visible is okay.
+        if (this.panel.style.display === 'none') this.panel.style.display = 'flex';
+
         if (!this.selectedElement) return;
 
         const tagName = this.selectedElement.tagName;
 
         if (tagName === 'IMG') {
-            // It's a Photo -> Show Photo Tools
             this.imageControls.style.display = 'block';
             this.textControls.style.display = 'none';
 
-            // Set slider values to match the current image
             this.imgWidthInput.value = parseInt(this.selectedElement.style.width) || 100;
             this.imgRadiusInput.value = parseInt(this.selectedElement.style.borderRadius) || 0;
 
         } else {
-            // It's Text (or something else) -> Show Text Tools
             this.imageControls.style.display = 'none';
             this.textControls.style.display = 'block';
 
-            // Sync Text inputs
             const style = window.getComputedStyle(this.selectedElement);
-            this.fontSizeInput.value = style.fontSize;
-            // (You can add more syncing logic here if needed)
+            
+            // Update Text Inputs
+            // ... (You can add more robust syncing here later)
         }
     }
 
@@ -156,8 +166,8 @@ export default class UIManager {
     }
 
     closeModal() { this.modal.style.display = 'none'; }
-    
+
     togglePreview() {
-            document.body.classList.toggle('preview-mode');
+        document.body.classList.toggle('preview-mode');
     }
 }
