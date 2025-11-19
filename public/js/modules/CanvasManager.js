@@ -14,19 +14,6 @@ export default class CanvasManager {
                 this.selectBlock(block, target);
             }
         });
-
-        // NEW: Listen for keyup (so if user types and moves cursor, we update UI)
-        this.canvas.addEventListener('keyup', (e) => {
-            const selection = window.getSelection();
-            if (selection.anchorNode) {
-                const target = (selection.anchorNode.nodeType === 3) 
-                    ? selection.anchorNode.parentElement 
-                    : selection.anchorNode;
-                
-                const block = target.closest('.block');
-                if (block) this.selectBlock(block, target);
-            }
-        });
     }
 
     setSelectionListener(callback) {

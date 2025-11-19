@@ -3,6 +3,7 @@ import HeroTemplates from './templates/HeroTemplates.js';
 import TextTemplates from './templates/TextTemplates.js';
 import DetailsTemplates from './templates/DetailsTemplates.js';
 import GuestTemplates from './templates/GuestTemplates.js';
+import ImageTemplates from './templates/ImageTemplates.js';
 
 export default class TemplateLibrary {
     constructor() {
@@ -11,7 +12,8 @@ export default class TemplateLibrary {
             hero: HeroTemplates,
             text: TextTemplates,
             details: DetailsTemplates,
-            guest: GuestTemplates
+            guest: GuestTemplates,
+            image: ImageTemplates
         };
     }
 

@@ -5,22 +5,29 @@ export default class UIManager {
         this.network = networkManager;
         
         this.selectedBlock = null;   // The Wrapper (for padding/delete)
-        this.selectedElement = null; // The Text (for color/font)
+        this.selectedElement = null; // The Specific Item (for color/font/image)
 
         // DOM Elements
         this.modal = document.getElementById('templateModal');
         this.grid = document.getElementById('templateGrid');
         this.closeBtn = document.querySelector('.close-btn');
         
-        // Panel Inputs
-        this.panel = document.getElementById('styleControls');
+        // Panel Sections
+        this.panel = document.getElementById('propertiesPanel'); // Main Panel
+        this.imageControls = document.getElementById('imageControls');
+        this.textControls = document.getElementById('textControls'); 
+
+        // Inputs
+        this.imageInput = document.getElementById('imageInput');
+        this.imgWidthInput = document.getElementById('imgWidthInput');
+        this.imgRadiusInput = document.getElementById('imgRadiusInput');
+
         this.colorInput = document.getElementById('colorInput');
         this.bgColorInput = document.getElementById('bgColorInput');
         this.paddingInput = document.getElementById('paddingInput');
         this.fontSizeInput = document.getElementById('fontSizeInput');
         this.deleteBtn = document.getElementById('deleteBlockBtn');
         
-        // Color Value Labels
         this.colorVal = document.getElementById('colorValue');
         this.bgVal = document.getElementById('bgColorValue');
     }
@@ -29,16 +36,38 @@ export default class UIManager {
         this.closeBtn.onclick = () => this.closeModal();
         window.onclick = (e) => { if (e.target == this.modal) this.closeModal(); };
 
-        // --- SELECTION LISTENER ---
+        // --- SELECTION LISTENER (The Magic Part) ---
         this.canvas.setSelectionListener((block, element) => {
             this.selectedBlock = block;
             this.selectedElement = element;
-            this.updatePanelValues(); // Sync inputs with the clicked element
+            this.updatePanelValues(); // Switch the sidebar tools!
         });
 
-        // --- 1. TEXT PROPERTIES (Apply to specific element) ---
+        // --- IMAGE LOGIC ---
+        this.imageInput.onchange = (e) => {
+            const file = e.target.files[0];
+            if (file && this.selectedElement && this.selectedElement.tagName === 'IMG') {
+                const reader = new FileReader();
+                reader.onload = (event) => {
+                    this.selectedElement.src = event.target.result; 
+                };
+                reader.readAsDataURL(file);
+            }
+        };
+
+        this.imgWidthInput.oninput = (e) => {
+            if (this.selectedElement && this.selectedElement.tagName === 'IMG') {
+                this.selectedElement.style.width = e.target.value + '%';
+            }
+        };
         
-        // Text Color
+        this.imgRadiusInput.oninput = (e) => {
+            if (this.selectedElement && this.selectedElement.tagName === 'IMG') {
+                this.selectedElement.style.borderRadius = e.target.value + '%';
+            }
+        };
+
+        // --- TEXT & BOX LOGIC ---
         this.colorInput.oninput = (e) => {
             if (this.selectedElement) {
                 this.selectedElement.style.color = e.target.value;
@@ -46,25 +75,16 @@ export default class UIManager {
             }
         };
 
-        // Font Size
         this.fontSizeInput.onchange = (e) => {
-            if (this.selectedElement) {
-                this.selectedElement.style.fontSize = e.target.value;
-            }
+            if (this.selectedElement) this.selectedElement.style.fontSize = e.target.value;
         };
 
-        // Text Alignment
         document.querySelectorAll('.align-btn').forEach(btn => {
             btn.onclick = () => {
-                if (this.selectedElement) {
-                    this.selectedElement.style.textAlign = btn.dataset.align;
-                }
+                if (this.selectedElement) this.selectedElement.style.textAlign = btn.dataset.align;
             };
         });
 
-        // --- 2. BOX PROPERTIES (Apply to the wrapper block) ---
-
-        // Background Color
         this.bgColorInput.oninput = (e) => {
             if (this.selectedBlock) {
                 this.selectedBlock.style.backgroundColor = e.target.value;
@@ -72,14 +92,10 @@ export default class UIManager {
             }
         };
 
-        // Padding
         this.paddingInput.oninput = (e) => {
-            if (this.selectedBlock) {
-                this.selectedBlock.style.padding = e.target.value + 'px';
-            }
+            if (this.selectedBlock) this.selectedBlock.style.padding = e.target.value + 'px';
         };
 
-        // Delete
         this.deleteBtn.onclick = () => {
             if (confirm("Delete this block?")) {
                 this.canvas.deleteSelected();
@@ -89,44 +105,34 @@ export default class UIManager {
     }
 
     /**
-     * Read the styles from the clicked element and update the sidebar
+     * Decides whether to show Image Controls or Text Controls
      */
     updatePanelValues() {
-        this.panel.style.display = 'block';
-        if (!this.selectedElement || !this.selectedBlock) return;
+        if (!this.selectedElement) return;
 
-        // Get computed styles (what the browser actually shows)
-        const textStyle = window.getComputedStyle(this.selectedElement);
-        const boxStyle = window.getComputedStyle(this.selectedBlock);
+        const tagName = this.selectedElement.tagName;
 
-        // Helper: Convert rgb(0,0,0) to #000000
-        const rgbToHex = (rgb) => {
-            if (!rgb || rgb.indexOf('rgb') === -1) return '#000000';
-            const sep = rgb.indexOf(",") > -1 ? "," : " ";
-            const rgbArr = rgb.substr(4).split(")")[0].split(sep);
-            let r = (+rgbArr[0]).toString(16),
-                g = (+rgbArr[1]).toString(16),
-                b = (+rgbArr[2]).toString(16);
-            if (r.length == 1) r = "0" + r;
-            if (g.length == 1) g = "0" + g;
-            if (b.length == 1) b = "0" + b;
-            return "#" + r + g + b;
-        };
+        if (tagName === 'IMG') {
+            // It's a Photo -> Show Photo Tools
+            this.imageControls.style.display = 'block';
+            this.textControls.style.display = 'none';
 
-        // Update UI Inputs
-        this.colorInput.value = rgbToHex(textStyle.color);
-        this.colorVal.innerText = this.colorInput.value;
+            // Set slider values to match the current image
+            this.imgWidthInput.value = parseInt(this.selectedElement.style.width) || 100;
+            this.imgRadiusInput.value = parseInt(this.selectedElement.style.borderRadius) || 0;
 
-        this.bgColorInput.value = rgbToHex(boxStyle.backgroundColor);
-        this.bgVal.innerText = this.bgColorInput.value;
-        
-        this.paddingInput.value = parseInt(boxStyle.padding) || 20;
-        
-        // Try to match font size to dropdown, or default to Normal
-        this.fontSizeInput.value = textStyle.fontSize; 
+        } else {
+            // It's Text (or something else) -> Show Text Tools
+            this.imageControls.style.display = 'none';
+            this.textControls.style.display = 'block';
+
+            // Sync Text inputs
+            const style = window.getComputedStyle(this.selectedElement);
+            this.fontSizeInput.value = style.fontSize;
+            // (You can add more syncing logic here if needed)
+        }
     }
 
-    // ... (Keep openCategorySelector and handleSave unchanged) ...
     openCategorySelector(category) {
         const options = this.library.getDesigns(category);
         this.grid.innerHTML = '';
