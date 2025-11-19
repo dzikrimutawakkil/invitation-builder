@@ -3,93 +3,130 @@ export default class UIManager {
         this.library = templateLibrary;
         this.canvas = canvasManager;
         this.network = networkManager;
-        this.selectedBlock = null; // Track the active block
+        
+        this.selectedBlock = null;   // The Wrapper (for padding/delete)
+        this.selectedElement = null; // The Text (for color/font)
 
         // DOM Elements
         this.modal = document.getElementById('templateModal');
         this.grid = document.getElementById('templateGrid');
         this.closeBtn = document.querySelector('.close-btn');
         
-        // Properties Panel Elements
+        // Panel Inputs
         this.panel = document.getElementById('styleControls');
         this.colorInput = document.getElementById('colorInput');
         this.bgColorInput = document.getElementById('bgColorInput');
         this.paddingInput = document.getElementById('paddingInput');
         this.fontSizeInput = document.getElementById('fontSizeInput');
         this.deleteBtn = document.getElementById('deleteBlockBtn');
+        
+        // Color Value Labels
+        this.colorVal = document.getElementById('colorValue');
+        this.bgVal = document.getElementById('bgColorValue');
     }
 
     init() {
-        // Modal Events
         this.closeBtn.onclick = () => this.closeModal();
         window.onclick = (e) => { if (e.target == this.modal) this.closeModal(); };
 
-        // Canvas Event: When a block is selected
-        this.canvas.setSelectionListener((block) => {
+        // --- SELECTION LISTENER ---
+        this.canvas.setSelectionListener((block, element) => {
             this.selectedBlock = block;
-            this.showProperties(block);
+            this.selectedElement = element;
+            this.updatePanelValues(); // Sync inputs with the clicked element
         });
 
-        // --- PROPERTY LISTENERS ---
+        // --- 1. TEXT PROPERTIES (Apply to specific element) ---
         
-        // 1. Text Color
+        // Text Color
         this.colorInput.oninput = (e) => {
-            if (this.selectedBlock) this.selectedBlock.style.color = e.target.value;
+            if (this.selectedElement) {
+                this.selectedElement.style.color = e.target.value;
+                this.colorVal.innerText = e.target.value;
+            }
         };
 
-        // 2. Background Color
-        this.bgColorInput.oninput = (e) => {
-            if (this.selectedBlock) this.selectedBlock.style.backgroundColor = e.target.value;
-        };
-
-        // 3. Padding
-        this.paddingInput.oninput = (e) => {
-            if (this.selectedBlock) this.selectedBlock.style.padding = e.target.value + 'px';
-        };
-
-        // 4. Font Size (Apply to the whole block for simplicity)
+        // Font Size
         this.fontSizeInput.onchange = (e) => {
-            if (this.selectedBlock) this.selectedBlock.style.fontSize = e.target.value;
+            if (this.selectedElement) {
+                this.selectedElement.style.fontSize = e.target.value;
+            }
         };
 
-        // 5. Alignment Buttons
+        // Text Alignment
         document.querySelectorAll('.align-btn').forEach(btn => {
             btn.onclick = () => {
-                if (this.selectedBlock) this.selectedBlock.style.textAlign = btn.dataset.align;
+                if (this.selectedElement) {
+                    this.selectedElement.style.textAlign = btn.dataset.align;
+                }
             };
         });
 
-        // 6. Delete
+        // --- 2. BOX PROPERTIES (Apply to the wrapper block) ---
+
+        // Background Color
+        this.bgColorInput.oninput = (e) => {
+            if (this.selectedBlock) {
+                this.selectedBlock.style.backgroundColor = e.target.value;
+                this.bgVal.innerText = e.target.value;
+            }
+        };
+
+        // Padding
+        this.paddingInput.oninput = (e) => {
+            if (this.selectedBlock) {
+                this.selectedBlock.style.padding = e.target.value + 'px';
+            }
+        };
+
+        // Delete
         this.deleteBtn.onclick = () => {
             if (confirm("Delete this block?")) {
                 this.canvas.deleteSelected();
-                this.panel.style.display = 'none'; // Hide panel
+                this.panel.style.display = 'none';
             }
         };
     }
 
     /**
-     * Update the sidebar inputs to match the clicked block
+     * Read the styles from the clicked element and update the sidebar
      */
-    showProperties(block) {
+    updatePanelValues() {
         this.panel.style.display = 'block';
-        
-        // Get computed styles (current values)
-        const style = window.getComputedStyle(block);
+        if (!this.selectedElement || !this.selectedBlock) return;
 
-        // Helper to convert rgb() to hex for the color picker
+        // Get computed styles (what the browser actually shows)
+        const textStyle = window.getComputedStyle(this.selectedElement);
+        const boxStyle = window.getComputedStyle(this.selectedBlock);
+
+        // Helper: Convert rgb(0,0,0) to #000000
         const rgbToHex = (rgb) => {
-            if (!rgb || rgb === 'rgba(0, 0, 0, 0)') return '#ffffff';
-            // Basic conversion logic or just ignore if complex
-            return '#000000'; // Simplified for demo
+            if (!rgb || rgb.indexOf('rgb') === -1) return '#000000';
+            const sep = rgb.indexOf(",") > -1 ? "," : " ";
+            const rgbArr = rgb.substr(4).split(")")[0].split(sep);
+            let r = (+rgbArr[0]).toString(16),
+                g = (+rgbArr[1]).toString(16),
+                b = (+rgbArr[2]).toString(16);
+            if (r.length == 1) r = "0" + r;
+            if (g.length == 1) g = "0" + g;
+            if (b.length == 1) b = "0" + b;
+            return "#" + r + g + b;
         };
 
-        // Update inputs
-        this.paddingInput.value = parseInt(style.padding) || 20;
-        // Note: Color pickers need HEX values. Doing robust RGB->HEX in JS is tricky, 
-        // so for this demo we just default them or leave them as is.
+        // Update UI Inputs
+        this.colorInput.value = rgbToHex(textStyle.color);
+        this.colorVal.innerText = this.colorInput.value;
+
+        this.bgColorInput.value = rgbToHex(boxStyle.backgroundColor);
+        this.bgVal.innerText = this.bgColorInput.value;
+        
+        this.paddingInput.value = parseInt(boxStyle.padding) || 20;
+        
+        // Try to match font size to dropdown, or default to Normal
+        this.fontSizeInput.value = textStyle.fontSize; 
     }
 
+    // ... (Keep openCategorySelector and handleSave unchanged) ...
     openCategorySelector(category) {
         const options = this.library.getDesigns(category);
         this.grid.innerHTML = '';

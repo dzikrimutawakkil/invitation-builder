@@ -1,12 +1,34 @@
 export default class CanvasManager {
     constructor(canvasId) {
         this.canvas = document.getElementById(canvasId);
-        this.onSelectionChange = null; // Callback function
+        this.onSelectionChange = null;
+
+        // NEW: Listen for clicks globally on the canvas
+        this.canvas.addEventListener('click', (e) => {
+            const target = e.target;
+            const block = target.closest('.block');
+
+            // If we clicked something inside a block
+            if (block) {
+                // Pass both the Wrapper (block) AND the Specific Element (target)
+                this.selectBlock(block, target);
+            }
+        });
+
+        // NEW: Listen for keyup (so if user types and moves cursor, we update UI)
+        this.canvas.addEventListener('keyup', (e) => {
+            const selection = window.getSelection();
+            if (selection.anchorNode) {
+                const target = (selection.anchorNode.nodeType === 3) 
+                    ? selection.anchorNode.parentElement 
+                    : selection.anchorNode;
+                
+                const block = target.closest('.block');
+                if (block) this.selectBlock(block, target);
+            }
+        });
     }
 
-    /**
-     * Set a function to call when a block is clicked
-     */
     setSelectionListener(callback) {
         this.onSelectionChange = callback;
     }
@@ -19,51 +41,37 @@ export default class CanvasManager {
 
     addBlock(htmlContent) {
         this.cleanCanvas();
-
         const el = document.createElement('div');
         el.className = 'block';
         el.contentEditable = "true"; 
         el.innerHTML = htmlContent;
-
-        // EVENT LISTENER: When clicked/focused, select this block
-        el.onclick = (e) => {
-            e.stopPropagation(); // Prevent clicking background
-            this.selectBlock(el);
-        };
-
-        this.canvas.appendChild(el);
         
-        // Auto-select the new block
-        this.selectBlock(el);
+        this.canvas.appendChild(el);
+        // Select the new block immediately
+        this.selectBlock(el, el); 
     }
 
-    selectBlock(el) {
-        // 1. Remove 'selected' class from old blocks
+    selectBlock(block, element) {
+        // 1. Visual Highlight for the Block Wrapper
         document.querySelectorAll('.block.selected').forEach(b => b.classList.remove('selected'));
-        
-        // 2. Add 'selected' class to new block
-        el.classList.add('selected');
+        block.classList.add('selected');
 
-        // 3. Notify UIManager
+        // 2. Notify UI with BOTH pieces of info
         if (this.onSelectionChange) {
-            this.onSelectionChange(el);
+            this.onSelectionChange(block, element);
         }
     }
 
-    /**
-     * Helper to delete the currently selected block
-     */
     deleteSelected() {
         const selected = this.canvas.querySelector('.block.selected');
         if (selected) selected.remove();
     }
 
     getDesignHtml() {
-        // Clean selection classes before saving so they don't show up in the final invite
         const clone = this.canvas.cloneNode(true);
         clone.querySelectorAll('.block').forEach(b => {
             b.classList.remove('selected');
-            b.removeAttribute('contenteditable'); // Clean up editable attribute
+            b.removeAttribute('contenteditable');
         });
         return clone.innerHTML;
     }
