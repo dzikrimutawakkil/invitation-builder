@@ -7,6 +7,8 @@
 </head>
 <body>
 
+    <button id="exitPreviewBtn" onclick="togglePreview()">❌ Close</button>
+
     <div class="sidebar">
         <h3>💍 Invitation Builder</h3>
         <div class="section-title">Structure</div>
@@ -21,6 +23,8 @@
     </div>
 
     <div class="workspace">
+        <button class="workspace-btn preview-toggle" onclick="togglePreview()">👁️ Preview</button>
+
         <div id="canvas">
             <div style="padding:20px; text-align:center; color:#999; margin-top:50%;">
                 Add blocks from the left to start building...

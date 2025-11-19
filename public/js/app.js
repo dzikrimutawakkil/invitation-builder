@@ -17,3 +17,5 @@ ui.init();
 // 4. Expose functions to the Global Window so HTML buttons can see them
 window.openSelector = (category) => ui.openCategorySelector(category);
 window.saveWork = () => ui.handleSave();
+
+window.togglePreview = () => ui.togglePreview();

@@ -156,4 +156,8 @@ export default class UIManager {
     }
 
     closeModal() { this.modal.style.display = 'none'; }
+    
+    togglePreview() {
+            document.body.classList.toggle('preview-mode');
+    }
 }

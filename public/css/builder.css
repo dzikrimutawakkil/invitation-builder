@@ -1,13 +1,18 @@
-/* UI Styles for the Editor Interface */
-
+/* =========================================
+   1. GENERAL LAYOUT
+   ========================================= */
 body { 
     background: #eef2f3; 
     display: flex; 
     height: 100vh; 
     overflow: hidden; 
+    margin: 0;
+    font-family: 'Lato', sans-serif;
 }
 
-/* --- SIDEBAR --- */
+/* =========================================
+   2. LEFT SIDEBAR (WIDGETS)
+   ========================================= */
 .sidebar {
     width: 280px;
     background: #2c3e50;
@@ -20,92 +25,140 @@ body {
     z-index: 10;
 }
 
-h3 { color: #ecf0f1; border-bottom: 1px solid #34495e; padding-bottom: 10px; margin-top: 0; }
-.section-title { font-size: 0.85em; text-transform: uppercase; color: #bdc3c7; margin-top: 10px; }
-
-/* Buttons */
-.tool-btn {
-    padding: 12px; background: #34495e; color: #ecf0f1;
-    border: none; border-radius: 6px; cursor: pointer; 
-    text-align: left; transition: 0.2s; font-size: 0.95em;
+h3 { 
+    color: #ecf0f1; 
+    border-bottom: 1px solid #34495e; 
+    padding-bottom: 10px; 
+    margin-top: 0; 
 }
-.tool-btn:hover { background: #1abc9c; color: white; transform: translateX(5px); }
-.special-btn { background: #e67e22; font-weight: bold; }
-.special-btn:hover { background: #d35400; }
-.save-btn { margin-top: auto; background: #27ae60; text-align: center; font-weight: bold; font-size: 1.1em; }
-.save-btn:hover { background: #2ecc71; }
 
-/* --- WORKSPACE --- */
-.workspace { flex: 1; background: #bdc3c7; display: flex; justify-content: center; align-items: center; padding: 40px; }
+.section-title { 
+    font-size: 0.85em; 
+    text-transform: uppercase; 
+    color: #bdc3c7; 
+    margin-top: 10px; 
+}
 
+/* Sidebar Buttons */
+.tool-btn {
+    padding: 12px; 
+    background: #34495e; 
+    color: #ecf0f1;
+    border: none; 
+    border-radius: 6px; 
+    cursor: pointer; 
+    text-align: left; 
+    transition: 0.2s; 
+    font-size: 0.95em;
+}
+
+.tool-btn:hover { 
+    background: #1abc9c; 
+    color: white; 
+    transform: translateX(5px); 
+}
+
+.special-btn { 
+    background: #e67e22; 
+    font-weight: bold; 
+}
+
+.special-btn:hover { 
+    background: #d35400; 
+}
+
+.save-btn { 
+    margin-top: auto; 
+    background: #27ae60; 
+    text-align: center; 
+    font-weight: bold; 
+    font-size: 1.1em; 
+}
+
+.save-btn:hover { 
+    background: #2ecc71; 
+}
+
+/* =========================================
+   3. CENTER WORKSPACE & CANVAS
+   ========================================= */
+.workspace { 
+    flex: 1; 
+    background: #bdc3c7; 
+    display: flex; 
+    justify-content: center; 
+    align-items: center; 
+    padding: 40px;
+    /* Important: This allows us to position the Preview button inside it */
+    position: relative; 
+}
+
+/* The "Enter Preview" Button (Top-Right of Grey Area) */
+.workspace-btn.preview-toggle {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    
+    background-color: white;
+    color: #333;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 30px;
+    font-weight: bold;
+    cursor: pointer;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    transition: 0.2s;
+    z-index: 5; /* Sit above the canvas */
+}
+
+.workspace-btn.preview-toggle:hover {
+    background-color: #f0f0f0;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+}
+
+/* The Phone Canvas */
 #canvas {
-    width: 375px; height: 750px; background: white;
-    box-shadow: 0 0 30px rgba(0,0,0,0.3); border-radius: 30px;
-    overflow-y: auto; position: relative;
+    width: 375px; 
+    height: 750px; 
+    background: white;
+    box-shadow: 0 0 30px rgba(0,0,0,0.3); 
+    border-radius: 30px;
+    overflow-y: auto; 
+    position: relative;
     border: 8px solid #333;
 }
-#canvas::-webkit-scrollbar { width: 0; }
 
-/* Highlight editable blocks */
-.block { position: relative; transition: 0.2s; }
-.block:hover { outline: 2px dashed #e67e22; cursor: pointer; }
-.block:focus { outline: 2px solid #3498db; }
-
-/* --- MODAL POPUP STYLES --- */
-.modal-overlay {
-    display: none; /* Hidden by default */
-    position: fixed; z-index: 100; left: 0; top: 0;
-    width: 100%; height: 100%;
-    background-color: rgba(0,0,0,0.6); /* Black semi-transparent */
-    justify-content: center; align-items: center;
+/* Hide scrollbar for cleaner look */
+#canvas::-webkit-scrollbar { 
+    width: 0; 
 }
 
-.modal-content {
-    background-color: white;
-    width: 80%; max-width: 600px;
-    border-radius: 10px; padding: 20px;
-    box-shadow: 0 4px 20px rgba(0,0,0,0.3);
-    animation: slideDown 0.3s ease;
+/* Highlight editable blocks on hover/select */
+.block { 
+    position: relative; 
+    transition: 0.2s; 
 }
 
-.modal-header {
-    display: flex; justify-content: space-between; align-items: center;
-    border-bottom: 1px solid #eee; padding-bottom: 10px; margin-bottom: 20px;
+.block:hover { 
+    outline: 2px dashed #e67e22; 
+    cursor: pointer; 
 }
 
-.template-grid {
-    display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-    gap: 15px;
+.block:focus { 
+    outline: 2px solid #3498db; 
 }
 
-/* Thumbnail Cards */
-.template-card {
-    border: 1px solid #ddd; border-radius: 8px;
-    cursor: pointer; overflow: hidden; transition: 0.2s;
-    text-align: center;
-}
-.template-card:hover {
-    border-color: #6a0dad; transform: scale(1.03);
-    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+/* The Green Border when an element is active */
+.block.selected {
+    outline: 2px solid #1abc9c !important;
+    position: relative;
+    z-index: 5;
 }
 
-/* Mini Preview inside the card */
-.preview-box {
-    height: 100px; overflow: hidden;
-    transform: scale(0.5); transform-origin: top center; /* Shrink it to fit */
-    width: 200%; /* Double width to counteract scale */
-    pointer-events: none; /* Prevent editing inside the thumbnail */
-}
-
-.close-btn { font-size: 28px; cursor: pointer; color: #aaa; }
-.close-btn:hover { color: #333; }
-
-@keyframes slideDown {
-    from { opacity: 0; transform: translateY(-20px); }
-    to { opacity: 1; transform: translateY(0); }
-}
-
-/* --- LAYOUT ADJUSTMENTS --- */
+/* =========================================
+   4. RIGHT SIDEBAR (PROPERTIES PANEL)
+   ========================================= */
 .properties-panel {
     width: 260px;
     background: #2c3e50;
@@ -118,44 +171,219 @@ h3 { color: #ecf0f1; border-bottom: 1px solid #34495e; padding-bottom: 10px; mar
     z-index: 10;
 }
 
-/* Workspace now shrinks to fit between sidebars */
-.workspace {
-    flex: 1;
-    background: #bdc3c7;
+.control-group { 
+    margin-bottom: 15px; 
 }
 
-/* --- FORM CONTROLS --- */
-.control-group { margin-bottom: 15px; }
-.control-group label { display: block; font-size: 0.85em; color: #bdc3c7; margin-bottom: 5px; }
+.control-group label { 
+    display: block; 
+    font-size: 0.85em; 
+    color: #bdc3c7; 
+    margin-bottom: 5px; 
+}
 
+/* Input Styles */
 .color-input-wrapper {
-    display: flex; align-items: center; gap: 10px;
-    background: #34495e; padding: 5px; border-radius: 5px;
+    display: flex; 
+    align-items: center; 
+    gap: 10px;
+    background: #34495e; 
+    padding: 5px; 
+    border-radius: 5px;
 }
 
 input[type="color"] {
-    border: none; width: 30px; height: 30px; cursor: pointer; background: none;
+    border: none; 
+    width: 30px; 
+    height: 30px; 
+    cursor: pointer; 
+    background: none;
 }
 
-input[type="range"], select {
-    width: 100%; padding: 8px; border-radius: 4px; border: none;
+input[type="range"], select, input[type="file"] {
+    width: 100%; 
+    padding: 8px; 
+    border-radius: 4px; 
+    border: none;
+    box-sizing: border-box;
 }
 
-.hint-text { font-size: 0.9em; color: #95a5a6; font-style: italic; }
+.hint-text { 
+    font-size: 0.9em; 
+    color: #95a5a6; 
+    font-style: italic; 
+}
 
-/* Align Buttons */
-.btn-group { display: flex; gap: 5px; }
+/* Alignment Buttons */
+.btn-group { 
+    display: flex; 
+    gap: 5px; 
+}
+
 .align-btn {
-    flex: 1; background: #34495e; border: none; color: white; padding: 8px; cursor: pointer; border-radius: 4px;
+    flex: 1; 
+    background: #34495e; 
+    border: none; 
+    color: white; 
+    padding: 8px; 
+    cursor: pointer; 
+    border-radius: 4px;
 }
-.align-btn:hover, .align-btn.active { background: #1abc9c; }
+
+.align-btn:hover, .align-btn.active { 
+    background: #1abc9c; 
+}
 
 /* Delete Button */
-.delete-btn { background: #c0392b; text-align: center; justify-content: center; }
-.delete-btn:hover { background: #e74c3c; }
+.delete-btn { 
+    background: #c0392b; 
+    text-align: center; 
+    justify-content: center; 
+}
 
-/* Selected State on Canvas */
-.block.selected {
-    outline: 2px solid #1abc9c !important; /* Green border when selected */
-    position: relative;
+.delete-btn:hover { 
+    background: #e74c3c; 
+}
+
+/* =========================================
+   5. MODAL POPUP (TEMPLATES)
+   ========================================= */
+.modal-overlay {
+    display: none; 
+    position: fixed; 
+    z-index: 100; 
+    left: 0; 
+    top: 0;
+    width: 100%; 
+    height: 100%;
+    background-color: rgba(0,0,0,0.6);
+    justify-content: center; 
+    align-items: center;
+}
+
+.modal-content {
+    background-color: white;
+    width: 80%; 
+    max-width: 600px;
+    border-radius: 10px; 
+    padding: 20px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+    animation: slideDown 0.3s ease;
+}
+
+.modal-header {
+    display: flex; 
+    justify-content: space-between; 
+    align-items: center;
+    border-bottom: 1px solid #eee; 
+    padding-bottom: 10px; 
+    margin-bottom: 20px;
+}
+
+.template-grid {
+    display: grid; 
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    gap: 15px;
+}
+
+/* Thumbnail Cards */
+.template-card {
+    border: 1px solid #ddd; 
+    border-radius: 8px;
+    cursor: pointer; 
+    overflow: hidden; 
+    transition: 0.2s;
+    text-align: center;
+}
+
+.template-card:hover {
+    border-color: #6a0dad; 
+    transform: scale(1.03);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+
+.preview-box {
+    height: 100px; 
+    overflow: hidden;
+    transform: scale(0.5); 
+    transform-origin: top center; 
+    width: 200%; 
+    pointer-events: none; 
+}
+
+.close-btn { 
+    font-size: 28px; 
+    cursor: pointer; 
+    color: #aaa; 
+}
+
+.close-btn:hover { 
+    color: #333; 
+}
+
+@keyframes slideDown {
+    from { opacity: 0; transform: translateY(-20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* =========================================
+   6. LIVE PREVIEW MODE (THE MAGIC PART)
+   ========================================= */
+
+/* Hide the editing tools */
+body.preview-mode .sidebar,
+body.preview-mode .properties-panel {
+    display: none !important;
+}
+
+/* Hide the "Enter Preview" button when we are ALREADY in preview mode */
+body.preview-mode .workspace-btn.preview-toggle {
+    display: none;
+}
+
+/* Darken the workspace and center it */
+body.preview-mode .workspace {
+    background: #333;
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+}
+
+/* Disable editing interactions on the phone */
+body.preview-mode .block {
+    outline: none !important;
+    pointer-events: none;
+    cursor: default;
+}
+
+/* FLOATING EXIT BUTTON (Only visible in Preview Mode) */
+#exitPreviewBtn {
+    display: none;          /* Hidden by default */
+    position: fixed;        /* Float above everything */
+    top: 20px;              
+    right: 20px;            
+    z-index: 10000;         /* Topmost layer */
+    
+    background-color: #e74c3c;
+    color: white;
+    border: none;
+    padding: 10px 24px;
+    border-radius: 30px;
+    font-weight: bold;
+    font-size: 1em;
+    cursor: pointer;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.4);
+    transition: transform 0.2s;
+}
+
+#exitPreviewBtn:hover {
+    background-color: #c0392b;
+    transform: scale(1.05);
+}
+
+/* Show the button ONLY when preview mode is active */
+body.preview-mode #exitPreviewBtn {
+    display: block;
 }
