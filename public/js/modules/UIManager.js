@@ -34,11 +34,25 @@ export default class UIManager {
         this.commonControls = document.getElementById('commonControls');
         this.moveUpBtn = document.getElementById('moveUpBtn');
         this.moveDownBtn = document.getElementById('moveDownBtn');
+
+        // NEW: Save Modal Elements
+        this.saveModal = document.getElementById('saveModal');
+        this.shareUrlInput = document.getElementById('shareUrlInput');
+        this.copyLinkBtn = document.getElementById('copyLinkBtn');
+        this.openLinkBtn = document.getElementById('openLinkBtn');
     }
 
     init() {
         this.closeBtn.onclick = () => this.closeModal();
         window.onclick = (e) => { if (e.target == this.modal) this.closeModal(); };
+
+        // NEW: Copy Link Logic
+        this.copyLinkBtn.onclick = () => {
+            this.shareUrlInput.select();
+            document.execCommand('copy');
+            this.copyLinkBtn.innerText = '✅ Copied!';
+            setTimeout(() => this.copyLinkBtn.innerText = '📋 Copy', 2000);
+        };
 
         // --- SELECTION LISTENER ---
         this.canvas.setSelectionListener((block, element) => {
@@ -179,7 +193,20 @@ export default class UIManager {
     async handleSave() {
         const html = this.canvas.getDesignHtml();
         const result = await this.network.saveDesign(html);
-        alert(result.success ? 'Design Saved!' : 'Failed to save.');
+
+        if (result.success) {
+            // 1. Construct the URL
+            const shareUrl = `${window.location.origin}/share/${result.id}?to=GuestName`;
+
+            // 2. Populate the Modal
+            this.shareUrlInput.value = shareUrl;
+            this.openLinkBtn.href = shareUrl;
+
+            // 3. Show the Modal
+            this.saveModal.style.display = 'flex';
+        } else {
+            alert('Failed to save design. Please try again.');
+        }
     }
 
     closeModal() { this.modal.style.display = 'none'; }

@@ -16,16 +16,16 @@ class App {
         this.app.set('view engine', 'ejs');
         this.app.set('views', path.join(__dirname, 'views'));
 
-        // Body Parsing (for JSON and Form data)
-        this.app.use(express.json());
-        this.app.use(express.urlencoded({ extended: true }));
+        // --- FIX: INCREASE BODY SIZE LIMIT ---
+        // Default is 100kb. We increase it to 50mb to handle images.
+        this.app.use(express.json({ limit: '50mb' }));
+        this.app.use(express.urlencoded({ extended: true, limit: '50mb' }));
 
         // Static Files
         this.app.use(express.static(path.join(__dirname, 'public')));
     }
 
     initializeRoutes() {
-        // Use the routes defined in our separate file
         this.app.use('/', mainRoutes);
     }
 

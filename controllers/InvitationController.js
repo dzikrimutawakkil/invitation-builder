@@ -1,44 +1,49 @@
 class InvitationController {
     constructor(storageService) {
-        // We inject the storage service so the controller can use it
         this.storage = storageService;
     }
 
-    /**
-     * GET / - Show the Builder
-     */
     renderBuilder = (req, res) => {
         res.render('index', { title: 'Invitation Builder' });
     }
 
-    /**
-     * POST /save-design - Save the data
-     */
-    saveDesign = (req, res) => {
-        const { htmlContent } = req.body;
-        
-        // Use the service to save data
-        this.storage.save(htmlContent);
-        
-        res.json({ success: true, message: 'Design Saved!' });
+    saveDesign = async (req, res) => {
+        try {
+            const { htmlContent } = req.body;
+            // Save to DB and wait for the new ID
+            const designId = await this.storage.save(htmlContent);
+            res.json({ success: true, id: designId });
+        } catch (error) {
+            console.error(error);
+            res.status(500).json({ success: false, message: 'Database Error' });
+        }
     }
 
-    /**
-     * GET /share - Show the final invitation
-     */
-    renderInvitation = (req, res) => {
-        const guestName = req.query.to || 'Guest';
-        
-        // Use the service to get data
-        const designHtml = this.storage.get();
+    // 🔴 CRITICAL FIX: Use the ID to find the specific invitation
+    renderInvitation = async (req, res) => {
+        try {
+            // 1. Get the ID from the URL (the ':id' part)
+            const designId = req.params.id;
+            const guestName = req.query.to || 'Guest';
+            
+            // 2. Ask the Database for this specific ID
+            const designHtml = await this.storage.get(designId);
 
-        // Apply the personalization logic
-        const personalizedContent = designHtml.replace(/{{GUEST_NAME}}/g, guestName);
+            if (!designHtml) {
+                return res.status(404).send("<h1>404: Invitation Not Found</h1>");
+            }
 
-        res.render('invitation', { 
-            title: `Invitation for ${guestName}`,
-            content: personalizedContent 
-        });
+            // 3. Personalize and Show
+            const personalizedContent = designHtml.replace(/{{GUEST_NAME}}/g, guestName);
+
+            res.render('invitation', { 
+                title: `Invitation for ${guestName}`,
+                content: personalizedContent 
+            });
+        } catch (error) {
+            console.error(error);
+            res.status(500).send("Server Error");
+        }
     }
 }
 

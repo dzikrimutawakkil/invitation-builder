@@ -1,23 +1,81 @@
+const sqlite3 = require('sqlite3').verbose();
+const path = require('path');
+const fs = require('fs'); // Import File System module
+
 class DesignStorage {
     constructor() {
-        // This mimics a database. 
-        // Later, you can replace this logic with a real DB connection easily.
-        this.latestDesign = "<h1>Welcome!</h1><p>Design not saved yet.</p>";
+        // 1. Define the folder and file paths
+        const dbFolder = path.join(__dirname, '../data');
+        const dbPath = path.join(dbFolder, 'database.sqlite');
+
+        // 2. CRITICAL FIX: Create the 'data' folder if it doesn't exist
+        if (!fs.existsSync(dbFolder)) {
+            fs.mkdirSync(dbFolder);
+            console.log('Created database folder.');
+        }
+        
+        // 3. Connect to the Database
+        this.db = new sqlite3.Database(dbPath, (err) => {
+            if (err) {
+                console.error('Could not connect to database', err);
+            } else {
+                console.log('Connected to SQLite database');
+            }
+        });
+
+        this.initDB();
+    }
+
+    // Create the table if it doesn't exist
+    initDB() {
+        const sql = `
+            CREATE TABLE IF NOT EXISTS invitations (
+                id TEXT PRIMARY KEY,
+                content TEXT,
+                created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+            )
+        `;
+        this.db.run(sql);
     }
 
     /**
-     * Save the user's HTML design
+     * Save design to the database (Async)
      */
     save(htmlContent) {
-        this.latestDesign = htmlContent;
-        console.log('Storage Update: Design saved successfully.');
+        return new Promise((resolve, reject) => {
+            // Generate a unique ID
+            const id = Date.now().toString(36) + Math.random().toString(36).substr(2, 5);
+            
+            const sql = `INSERT INTO invitations (id, content) VALUES (?, ?)`;
+            
+            this.db.run(sql, [id, htmlContent], function(err) {
+                if (err) {
+                    console.error(err);
+                    reject(err);
+                } else {
+                    console.log(`[DB] Row inserted with ID: ${id}`);
+                    resolve(id);
+                }
+            });
+        });
     }
 
     /**
-     * Retrieve the current saved design
+     * Get design from the database (Async)
      */
-    get() {
-        return this.latestDesign;
+    get(id) {
+        return new Promise((resolve, reject) => {
+            const sql = `SELECT content FROM invitations WHERE id = ?`;
+            
+            this.db.get(sql, [id], (err, row) => {
+                if (err) {
+                    reject(err);
+                } else {
+                    // If row exists, return content; otherwise return null
+                    resolve(row ? row.content : null);
+                }
+            });
+        });
     }
 }
 
