@@ -79,4 +79,8 @@ export default class CanvasManager {
             block.scrollIntoView({ behavior: 'smooth', block: 'center' });
         }
     }
+    
+    getTheme() {
+        return this.canvas.getAttribute('data-theme') || '';
+    }
 }

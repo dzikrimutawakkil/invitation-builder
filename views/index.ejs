@@ -35,7 +35,7 @@
     <div class="workspace">
         <button class="workspace-btn preview-toggle" onclick="togglePreview()">👁️ Preview</button>
 
-        <div id="canvas">
+        <div id="canvas" data-theme="<%= locals.preloadTheme || '' %>">
             <% if (locals.preloadDesign) { %>
                 <%- preloadDesign %>
             <% } else { %>

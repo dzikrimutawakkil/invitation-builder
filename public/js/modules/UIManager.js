@@ -192,20 +192,18 @@ export default class UIManager {
 
     async handleSave() {
         const html = this.canvas.getDesignHtml();
-        const result = await this.network.saveDesign(html);
+        const theme = this.canvas.getTheme(); // Get the theme!
 
+        // Send both to the server
+        const result = await this.network.saveDesign(html, theme);
+        
         if (result.success) {
-            // 1. Construct the URL
             const shareUrl = `${window.location.origin}/share/${result.id}?to=GuestName`;
-
-            // 2. Populate the Modal
             this.shareUrlInput.value = shareUrl;
             this.openLinkBtn.href = shareUrl;
-
-            // 3. Show the Modal
             this.saveModal.style.display = 'flex';
         } else {
-            alert('Failed to save design. Please try again.');
+            alert('Failed to save design.');
         }
     }
 
