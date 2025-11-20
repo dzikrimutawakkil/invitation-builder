@@ -3,8 +3,32 @@ class InvitationController {
         this.storage = storageService;
     }
 
+    // Normal Builder (Empty)
     renderBuilder = (req, res) => {
-        res.render('index', { title: 'Invitation Builder' });
+        res.render('index', { 
+            title: 'Invitation Builder',
+            preloadDesign: null // No design to load
+        });
+    }
+
+    // Edit Mode (Pre-filled)
+    editBuilder = async (req, res) => {
+        try {
+            const designId = req.params.id;
+            const designHtml = await this.storage.get(designId);
+
+            if (!designHtml) {
+                return res.status(404).send("Design not found");
+            }
+
+            res.render('index', { 
+                title: 'Edit Invitation',
+                preloadDesign: designHtml // Pass the saved HTML
+            });
+        } catch (error) {
+            console.error(error);
+            res.status(500).send("Server Error");
+        }
     }
 
     saveDesign = async (req, res) => {
