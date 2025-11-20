@@ -397,3 +397,8 @@ body:not(.preview-mode) .block > * {
     transform: none !important;
     transition: none !important;
 }
+
+/* Disable map interaction inside the builder so we can click the block */
+body:not(.preview-mode) .map-frame {
+    pointer-events: none;
+}

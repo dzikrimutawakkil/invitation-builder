@@ -328,3 +328,37 @@ h1, h2, h3 { font-family: var(--font-heading); }
 .block.in-view > *:nth-child(3) { transition-delay: 0.3s; }
 .block.in-view > *:nth-child(4) { transition-delay: 0.4s; }
 .block.in-view > *:nth-child(5) { transition-delay: 0.5s; }
+
+/* --- MAP SECTION --- */
+.details-map {
+    width: 90%;
+    text-align: center;
+    background: white;
+    padding: 20px;
+    border-radius: var(--border-radius);
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+}
+
+.map-wrapper {
+    border-radius: 8px;
+    overflow: hidden;
+    border: 1px solid #eee;
+    margin-bottom: 15px;
+}
+
+.map-btn {
+    display: inline-block;
+    background: var(--primary-color);
+    color: white;
+    text-decoration: none;
+    padding: 10px 20px;
+    border-radius: 30px;
+    font-weight: bold;
+    font-size: 0.9em;
+    transition: transform 0.2s;
+}
+
+.map-btn:hover {
+    transform: translateY(-2px);
+    opacity: 0.9;
+}

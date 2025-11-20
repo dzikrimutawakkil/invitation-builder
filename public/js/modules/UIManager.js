@@ -40,6 +40,10 @@ export default class UIManager {
         this.shareUrlInput = document.getElementById('shareUrlInput');
         this.copyLinkBtn = document.getElementById('copyLinkBtn');
         this.openLinkBtn = document.getElementById('openLinkBtn');
+
+        this.mapControls = document.getElementById('mapControls');
+        this.mapAddressInput = document.getElementById('mapAddressInput');
+        this.updateMapBtn = document.getElementById('updateMapBtn');
     }
 
     init() {
@@ -139,6 +143,24 @@ export default class UIManager {
         this.moveDownBtn.onclick = () => {
             if (this.selectedBlock) this.canvas.moveBlockDown(this.selectedBlock);
         };
+
+        // MAP LOGIC
+        this.updateMapBtn.onclick = () => {
+            if (this.selectedBlock) {
+                const iframe = this.selectedBlock.querySelector('iframe.map-frame');
+                const btn = this.selectedBlock.querySelector('a.map-btn');
+                const address = this.mapAddressInput.value;
+
+                if (iframe && address) {
+                    // Update Google Maps Embed URL
+                    const embedUrl = `https://maps.google.com/maps?q=${encodeURIComponent(address)}&t=&z=13&ie=UTF8&iwloc=&output=embed`;
+                    iframe.src = embedUrl;
+
+                    // Update the "Get Directions" button
+                    if (btn) btn.href = `https://maps.google.com?q=${encodeURIComponent(address)}`;
+                }
+            }
+        };
     }
 
     updatePanelValues() {
@@ -168,9 +190,14 @@ export default class UIManager {
             this.textControls.style.display = 'block';
 
             const style = window.getComputedStyle(this.selectedElement);
-            
-            // Update Text Inputs
-            // ... (You can add more robust syncing here later)
+        }
+
+        const mapFrame = this.selectedBlock.querySelector('iframe.map-frame');
+
+        if (mapFrame) {
+            this.mapControls.style.display = 'block';
+        } else {
+            this.mapControls.style.display = 'none';
         }
     }
 
