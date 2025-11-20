@@ -89,16 +89,14 @@ h3 {
     justify-content: center; 
     align-items: center; 
     padding: 40px;
-    /* Important: This allows us to position the Preview button inside it */
     position: relative; 
 }
 
-/* The "Enter Preview" Button (Top-Right of Grey Area) */
+/* The "Enter Preview" Button */
 .workspace-btn.preview-toggle {
     position: absolute;
     top: 20px;
     right: 20px;
-    
     background-color: white;
     color: #333;
     border: none;
@@ -108,7 +106,7 @@ h3 {
     cursor: pointer;
     box-shadow: 0 4px 10px rgba(0,0,0,0.1);
     transition: 0.2s;
-    z-index: 5; /* Sit above the canvas */
+    z-index: 5; 
 }
 
 .workspace-btn.preview-toggle:hover {
@@ -129,12 +127,9 @@ h3 {
     border: 8px solid #333;
 }
 
-/* Hide scrollbar for cleaner look */
-#canvas::-webkit-scrollbar { 
-    width: 0; 
-}
+#canvas::-webkit-scrollbar { width: 0; }
 
-/* Highlight editable blocks on hover/select */
+/* Highlight editable blocks */
 .block { 
     position: relative; 
     transition: 0.2s; 
@@ -149,7 +144,6 @@ h3 {
     outline: 2px solid #3498db; 
 }
 
-/* The Green Border when an element is active */
 .block.selected {
     outline: 2px solid #1abc9c !important;
     position: relative;
@@ -169,158 +163,145 @@ h3 {
     flex-direction: column;
     gap: 20px;
     z-index: 10;
-    overflow-y: auto;
+    overflow-y: auto; /* Enable Scrolling */
 }
 
-.control-group { 
-    margin-bottom: 15px; 
-}
+.control-group { margin-bottom: 15px; }
+.control-group label { display: block; font-size: 0.85em; color: #bdc3c7; margin-bottom: 5px; }
 
-.control-group label { 
-    display: block; 
-    font-size: 0.85em; 
-    color: #bdc3c7; 
-    margin-bottom: 5px; 
-}
-
-/* Input Styles */
 .color-input-wrapper {
-    display: flex; 
-    align-items: center; 
-    gap: 10px;
-    background: #34495e; 
-    padding: 5px; 
-    border-radius: 5px;
+    display: flex; align-items: center; gap: 10px;
+    background: #34495e; padding: 5px; border-radius: 5px;
 }
 
 input[type="color"] {
-    border: none; 
-    width: 30px; 
-    height: 30px; 
-    cursor: pointer; 
-    background: none;
+    border: none; width: 30px; height: 30px; cursor: pointer; background: none;
 }
 
-input[type="range"], select, input[type="file"] {
-    width: 100%; 
-    padding: 8px; 
-    border-radius: 4px; 
-    border: none;
-    box-sizing: border-box;
+input[type="range"], select, input[type="file"], input[type="text"] {
+    width: 100%; padding: 8px; border-radius: 4px; border: none; box-sizing: border-box;
 }
 
-.hint-text { 
-    font-size: 0.9em; 
-    color: #95a5a6; 
-    font-style: italic; 
-}
+.hint-text { font-size: 0.9em; color: #95a5a6; font-style: italic; }
 
-/* Alignment Buttons */
-.btn-group { 
-    display: flex; 
-    gap: 5px; 
-}
-
+.btn-group { display: flex; gap: 5px; }
 .align-btn {
-    flex: 1; 
-    background: #34495e; 
-    border: none; 
-    color: white; 
-    padding: 8px; 
-    cursor: pointer; 
-    border-radius: 4px;
+    flex: 1; background: #34495e; border: none; color: white; 
+    padding: 8px; cursor: pointer; border-radius: 4px;
 }
+.align-btn:hover, .align-btn.active { background: #1abc9c; }
 
-.align-btn:hover, .align-btn.active { 
-    background: #1abc9c; 
-}
-
-/* Delete Button */
-.delete-btn { 
-    background: #c0392b; 
-    text-align: center; 
-    justify-content: center; 
-}
-
-.delete-btn:hover { 
-    background: #e74c3c; 
-}
+.delete-btn { background: #c0392b; text-align: center; justify-content: center; }
+.delete-btn:hover { background: #e74c3c; }
 
 /* =========================================
-   5. MODAL POPUP (TEMPLATES)
+   5. MODAL POPUP & PREVIEW (FIXED)
    ========================================= */
 .modal-overlay {
     display: none; 
-    position: fixed; 
-    z-index: 100; 
-    left: 0; 
-    top: 0;
-    width: 100%; 
-    height: 100%;
+    position: fixed; z-index: 100; left: 0; top: 0;
+    width: 100%; height: 100%;
     background-color: rgba(0,0,0,0.6);
-    justify-content: center; 
-    align-items: center;
+    justify-content: center; align-items: center;
 }
 
 .modal-content {
     background-color: white;
-    width: 80%; 
-    max-width: 600px;
-    border-radius: 10px; 
-    padding: 20px;
+    width: 80%; max-width: 700px;
+    border-radius: 10px; padding: 20px;
     box-shadow: 0 4px 20px rgba(0,0,0,0.3);
     animation: slideDown 0.3s ease;
+    max-height: 80vh;
+    overflow-y: auto;
 }
 
 .modal-header {
-    display: flex; 
-    justify-content: space-between; 
-    align-items: center;
-    border-bottom: 1px solid #eee; 
-    padding-bottom: 10px; 
-    margin-bottom: 20px;
+    display: flex; justify-content: space-between; align-items: center;
+    border-bottom: 1px solid #eee; padding-bottom: 10px; margin-bottom: 20px;
 }
 
 .template-grid {
     display: grid; 
-    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-    gap: 15px;
+    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+    gap: 20px;
 }
 
-/* Thumbnail Cards */
+/* --- UPDATED PREVIEW LOGIC --- */
 .template-card {
-    border: 1px solid #ddd; 
-    border-radius: 8px;
-    cursor: pointer; 
-    overflow: hidden; 
-    transition: 0.2s;
+    border: 1px solid #ddd; border-radius: 8px;
+    cursor: pointer; overflow: hidden; transition: 0.2s;
     text-align: center;
+    background: #fff;
+    display: flex;
+    flex-direction: column;
 }
 
 .template-card:hover {
-    border-color: #6a0dad; 
-    transform: scale(1.03);
+    border-color: #6a0dad; transform: scale(1.02);
     box-shadow: 0 4px 8px rgba(0,0,0,0.1);
 }
 
+/* 1. The Box Container (Fixed Aspect Ratio) */
 .preview-box {
-    height: 100px; 
+    width: 100%;
+    aspect-ratio: 4/3; /* Keeps it rectangular and consistent */
     overflow: hidden;
-    transform: scale(0.5); 
-    transform-origin: top center; 
-    width: 200%; 
-    pointer-events: none; 
+    background: white;
+    border-bottom: 1px solid #eee;
+    position: relative;
 }
 
-.close-btn { 
-    font-size: 28px; 
-    cursor: pointer; 
-    color: #aaa; 
+/* 2. The Content Inside (Scaled Down) */
+.preview-box > div {
+    position: absolute;
+    top: 0; left: 0;
+    
+    /* Render content at 200% width (Mobile Size) */
+    width: 200% !important; 
+    
+    /* Scale down to 50% to fit the box */
+    transform: scale(0.5);
+    transform-origin: top left;
+    
+    margin: 0 !important;
+    height: auto !important;
+    min-height: 200%; /* Ensure background fills the space */
+    box-sizing: border-box;
+    
+    /* Force small padding for the thumbnail */
+    padding: 15px !important; 
+    
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
 }
 
-.close-btn:hover { 
-    color: #333; 
+/* 3. Shrink Elements for Preview */
+.preview-box h1, 
+.preview-box h2 { 
+    font-size: 2.5em !important; 
+    margin: 10px 0 !important; 
 }
+
+.preview-box p {
+    font-size: 1.2em !important;
+}
+
+.preview-box img { 
+    width: 80% !important;
+    height: auto !important;
+    max-height: 300px !important; 
+    object-fit: cover; 
+}
+
+.preview-box iframe {
+    pointer-events: none;
+    height: 200px !important;
+}
+
+.close-btn { font-size: 28px; cursor: pointer; color: #aaa; }
+.close-btn:hover { color: #333; }
 
 @keyframes slideDown {
     from { opacity: 0; transform: translateY(-20px); }
@@ -328,78 +309,34 @@ input[type="range"], select, input[type="file"] {
 }
 
 /* =========================================
-   6. LIVE PREVIEW MODE (THE MAGIC PART)
+   6. LIVE PREVIEW MODE
    ========================================= */
-
-/* Hide the editing tools */
 body.preview-mode .sidebar,
-body.preview-mode .properties-panel {
-    display: none !important;
-}
+body.preview-mode .properties-panel { display: none !important; }
 
-/* Hide the "Enter Preview" button when we are ALREADY in preview mode */
-body.preview-mode .workspace-btn.preview-toggle {
-    display: none;
-}
+body.preview-mode .workspace-btn.preview-toggle { display: none; }
 
-/* Darken the workspace and center it */
 body.preview-mode .workspace {
-    background: #333;
-    height: 100vh;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 0;
+    background: #333; height: 100vh; padding: 0;
 }
 
-/* Disable editing interactions on the phone */
 body.preview-mode .block {
-    outline: none !important;
-    pointer-events: none;
-    cursor: default;
+    outline: none !important; pointer-events: none; cursor: default;
 }
 
-/* FLOATING EXIT BUTTON (Only visible in Preview Mode) */
 #exitPreviewBtn {
-    display: none;          /* Hidden by default */
-    position: fixed;        /* Float above everything */
-    top: 20px;              
-    right: 20px;            
-    z-index: 10000;         /* Topmost layer */
-    
-    background-color: #e74c3c;
-    color: white;
-    border: none;
-    padding: 10px 24px;
-    border-radius: 30px;
-    font-weight: bold;
-    font-size: 1em;
-    cursor: pointer;
+    display: none; position: fixed; top: 20px; right: 20px; z-index: 10000;
+    background-color: #e74c3c; color: white; border: none; padding: 10px 24px;
+    border-radius: 30px; font-weight: bold; cursor: pointer;
     box-shadow: 0 4px 15px rgba(0,0,0,0.4);
-    transition: transform 0.2s;
 }
-
-#exitPreviewBtn:hover {
-    background-color: #c0392b;
-    transform: scale(1.05);
-}
-
-/* Show the button ONLY when preview mode is active */
-body.preview-mode #exitPreviewBtn {
-    display: block;
-}
+#exitPreviewBtn:hover { background-color: #c0392b; transform: scale(1.05); }
+body.preview-mode #exitPreviewBtn { display: block; }
 
 /* --- ANIMATION OVERRIDE FOR EDITOR --- */
-/* While editing (NOT in preview mode), force everything to be visible.
-   We only want animations to happen in "Live Preview" or the Real Website.
-*/
+/* Force animations to complete immediately in the builder */
 body:not(.preview-mode) .block > * {
     opacity: 1 !important;
     transform: none !important;
     transition: none !important;
-}
-
-/* Disable map interaction inside the builder so we can click the block */
-body:not(.preview-mode) .map-frame {
-    pointer-events: none;
 }
