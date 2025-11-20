@@ -44,6 +44,10 @@ export default class UIManager {
         this.mapControls = document.getElementById('mapControls');
         this.mapAddressInput = document.getElementById('mapAddressInput');
         this.updateMapBtn = document.getElementById('updateMapBtn');
+
+        // NEW: Elements for Link Extraction
+        this.mapLinkInput = document.getElementById('mapLinkInput');
+        this.extractMapBtn = document.getElementById('extractMapBtn');
     }
 
     init() {
@@ -152,13 +156,42 @@ export default class UIManager {
                 const address = this.mapAddressInput.value;
 
                 if (iframe && address) {
-                    // Update Google Maps Embed URL
                     const embedUrl = `https://maps.google.com/maps?q=${encodeURIComponent(address)}&t=&z=13&ie=UTF8&iwloc=&output=embed`;
                     iframe.src = embedUrl;
-
-                    // Update the "Get Directions" button
-                    if (btn) btn.href = `https://maps.google.com?q=${encodeURIComponent(address)}`;
+                    if (btn) btn.href = `https://maps.google.com/maps?q=${encodeURIComponent(address)}`;
                 }
+            }
+        };
+
+        this.extractMapBtn.onclick = () => {
+            const link = this.mapLinkInput.value;
+            if (!link) return alert("Please paste a Google Maps link first.");
+
+            // Regex to find coordinates like @-7.4073101,112.7563224
+            // It looks for the '@' symbol followed by numbers, comma, numbers
+            const coordsMatch = link.match(/@([-0-9.]+),([-0-9.]+)/);
+
+            if (coordsMatch && coordsMatch.length >= 3) {
+                const lat = coordsMatch[1];
+                const lng = coordsMatch[2];
+                const coords = `${lat},${lng}`;
+
+                if (this.selectedBlock) {
+                    const iframe = this.selectedBlock.querySelector('iframe.map-frame');
+                    const btn = this.selectedBlock.querySelector('a.map-btn');
+
+                    // Update using Coordinates instead of Address Text
+                    const embedUrl = `https://maps.google.com/maps?q=${coords}&t=&z=15&ie=UTF8&iwloc=&output=embed`;
+
+                    if (iframe) iframe.src = embedUrl;
+                    if (btn) btn.href = link; // Use the original link for the button
+
+                    // Also update the text input so user knows it worked
+                    this.mapAddressInput.value = coords;
+                    alert("Location extracted successfully!");
+                }
+            } else {
+                alert("Could not find coordinates in that link. Please try a standard Google Maps link.");
             }
         };
     }

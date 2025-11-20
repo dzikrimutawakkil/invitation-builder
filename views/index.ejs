@@ -73,11 +73,19 @@
             </div>
         </div>
 
+        <!-- MAP CONTROLS -->
         <div id="mapControls" style="display:none; border-bottom: 1px solid #444; padding-bottom: 20px; margin-bottom: 20px;">
             <label>📍 Event Location</label>
-            <p class="hint-text">Enter address (e.g., "Central Park, NY")</p>
-            <input type="text" id="mapAddressInput" placeholder="Type address here...">
+            
+            <!-- Option 1: Address Search -->
+            <p class="hint-text" style="margin-top: 5px;">Option 1: Type Address</p>
+            <input type="text" id="mapAddressInput" placeholder="e.g. Central Park, NY">
             <button id="updateMapBtn" class="tool-btn" style="margin-top:10px; background:#2980b9;">Update Map</button>
+            
+            <!-- Option 2: Google Maps Link -->
+            <p class="hint-text" style="margin-top: 15px; border-top: 1px dashed #555; padding-top: 10px;">Option 2: Paste Google Maps Link</p>
+            <input type="text" id="mapLinkInput" placeholder="Paste link here...">
+            <button id="extractMapBtn" class="tool-btn" style="margin-top:10px; background:#27ae60;">Extract & Set Location</button>
         </div>
 
         <div id="textControls" style="display:none;">
