@@ -62,4 +62,21 @@ export default class CanvasManager {
         });
         return clone.innerHTML;
     }
+
+    moveBlockUp(block) {
+        // If there is a previous sibling, move this block before it
+        if (block.previousElementSibling) {
+            this.canvas.insertBefore(block, block.previousElementSibling);
+            // Keep it selected / scroll to it
+            block.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+    }
+
+    moveBlockDown(block) {
+        // If there is a next sibling, move it after (by inserting before the one after next)
+        if (block.nextElementSibling) {
+            this.canvas.insertBefore(block.nextElementSibling, block);
+            block.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+    }
 }

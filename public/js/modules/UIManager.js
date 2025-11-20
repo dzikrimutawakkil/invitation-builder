@@ -30,6 +30,10 @@ export default class UIManager {
         
         this.colorVal = document.getElementById('colorValue');
         this.bgVal = document.getElementById('bgColorValue');
+
+        this.commonControls = document.getElementById('commonControls');
+        this.moveUpBtn = document.getElementById('moveUpBtn');
+        this.moveDownBtn = document.getElementById('moveDownBtn');
     }
 
     init() {
@@ -113,6 +117,14 @@ export default class UIManager {
                 // We don't set display='none' on this.panel anymore!
             }
         };
+
+        this.moveUpBtn.onclick = () => {
+            if (this.selectedBlock) this.canvas.moveBlockUp(this.selectedBlock);
+        };
+
+        this.moveDownBtn.onclick = () => {
+            if (this.selectedBlock) this.canvas.moveBlockDown(this.selectedBlock);
+        };
     }
 
     updatePanelValues() {
@@ -121,7 +133,12 @@ export default class UIManager {
         // but forcing it visible is okay.
         if (this.panel.style.display === 'none') this.panel.style.display = 'flex';
 
-        if (!this.selectedElement) return;
+        if (!this.selectedElement) {
+            this.commonControls.style.display = 'none'; // Hide if nothing selected
+            return;
+        }
+
+        this.commonControls.style.display = 'block';
 
         const tagName = this.selectedElement.tagName;
 
@@ -170,4 +187,6 @@ export default class UIManager {
     togglePreview() {
         document.body.classList.toggle('preview-mode');
     }
+
+    
 }
