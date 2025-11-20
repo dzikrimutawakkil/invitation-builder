@@ -28,7 +28,7 @@
         <button class="tool-btn" onclick="openSelector('image')">📷 Add Photo</button>
         <button class="tool-btn" style="border-left: 4px solid #27ae60;" onclick="openSelector('rsvp')">💌 Add RSVP Form</button>
         <button class="tool-btn special-btn" onclick="openSelector('guest')">Add Guest Name</button>
-
+        <button class="tool-btn" style="border-left: 4px solid #e74c3c;" onclick="openMusicSettings()">🎵 Background Music</button>
         <button class="tool-btn save-btn" onclick="saveWork()">Save Design</button>
     </div>
 
@@ -73,6 +73,19 @@
             </div>
         </div>
 
+        <div id="musicControls" style="display:none; border-bottom: 1px solid #444; padding-bottom: 20px; margin-bottom: 20px;">
+            <label>🎵 Ambient Music</label>
+            <p class="hint-text">Upload an MP3 or paste a link.</p>
+            
+            <input type="file" id="musicInput" accept="audio/mp3,audio/mpeg" style="width: 100%; margin-top: 5px;">
+            <p style="text-align:center; margin:5px 0;">OR</p>
+            <input type="text" id="musicUrlInput" placeholder="https://example.com/song.mp3">
+            
+            <div id="musicPreview" style="margin-top:10px; color:#27ae60; font-size:0.9em; display:none;">
+                ✅ Music Selected
+            </div>
+        </div>
+
         <!-- MAP CONTROLS -->
         <div id="mapControls" style="display:none; border-bottom: 1px solid #444; padding-bottom: 20px; margin-bottom: 20px;">
             <label>📍 Event Location</label>
@@ -98,11 +111,24 @@
             </div>
 
             <div class="control-group">
-                <label>Background</label>
+                <label>Background Color</label>
                 <div class="color-input-wrapper">
                     <input type="color" id="bgColorInput">
                     <span id="bgColorValue">#ffffff</span>
                 </div>
+            </div>
+
+            <div class="control-group" style="border-top: 1px dashed #555; padding-top: 15px; margin-top: 15px;">
+                <label>🌄 Background Image</label>
+                <p class="hint-text">Upload to replace color</p>
+                <input type="file" id="bgImageInput" accept="image/*">
+                
+                <div style="margin-top: 10px; display: flex; align-items: center; gap: 10px;">
+                    <input type="checkbox" id="parallaxCheckbox" style="width: auto;">
+                    <label for="parallaxCheckbox" style="margin:0; cursor:pointer;">Enable Parallax Effect</label>
+                </div>
+                
+                <button id="removeBgImgBtn" class="tool-btn" style="margin-top: 10px; background: #c0392b; font-size: 0.8em;">Remove Image</button>
             </div>
 
             <div class="control-group">

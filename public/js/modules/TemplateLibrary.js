@@ -15,7 +15,7 @@ export default class TemplateLibrary {
             details: DetailsTemplates,
             guest: GuestTemplates,
             image: ImageTemplates,
-            rsvp: RsvpTemplates
+            rsvp: RsvpTemplates,
         };
     }
 

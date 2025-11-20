@@ -26,6 +26,7 @@ class DesignStorage {
                 id TEXT PRIMARY KEY,
                 content TEXT,
                 theme TEXT, 
+                music TEXT,  
                 created_at DATETIME DEFAULT CURRENT_TIMESTAMP
             )
         `);
@@ -43,14 +44,11 @@ class DesignStorage {
         `);
     }
 
-    save(htmlContent, theme) {
+    save(htmlContent, theme, music) {
         return new Promise((resolve, reject) => {
             const id = Date.now().toString(36) + Math.random().toString(36).substr(2, 5);
-            
-            // UPDATED SQL: Added theme column
-            const sql = `INSERT INTO invitations (id, content, theme) VALUES (?, ?, ?)`;
-            
-            this.db.run(sql, [id, htmlContent, theme], function(err) {
+            const sql = `INSERT INTO invitations (id, content, theme, music) VALUES (?, ?, ?, ?)`;
+            this.db.run(sql, [id, htmlContent, theme, music], function(err) {
                 if (err) reject(err);
                 else resolve(id);
             });
@@ -59,12 +57,9 @@ class DesignStorage {
 
     get(id) {
         return new Promise((resolve, reject) => {
-            // UPDATED SQL: Select * to get all columns including theme
             const sql = `SELECT * FROM invitations WHERE id = ?`;
-            
             this.db.get(sql, [id], (err, row) => {
                 if (err) reject(err);
-                // Return the whole row (content + theme)
                 else resolve(row || null);
             });
         });

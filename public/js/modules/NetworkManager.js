@@ -1,10 +1,10 @@
 export default class NetworkManager {
-    async saveDesign(htmlContent, theme) {
+    async saveDesign(htmlContent, theme, music) {
         try {
             const response = await fetch('/save-design', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ htmlContent, theme }) // Send both
+                body: JSON.stringify({ htmlContent, theme, music }) // Send both
             });
             return await response.json();
         } catch (error) {

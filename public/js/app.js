@@ -25,3 +25,5 @@ window.changeTheme = (themeName) => {
     // We set the attribute on the Canvas so only the phone changes color
     canvas.setAttribute('data-theme', themeName);
 };
+
+window.openMusicSettings = () => ui.openMusicSettings();

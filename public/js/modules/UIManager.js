@@ -4,157 +4,119 @@ export default class UIManager {
         this.canvas = canvasManager;
         this.network = networkManager;
         
-        this.selectedBlock = null;   // The Wrapper (for padding/delete)
-        this.selectedElement = null; // The Specific Item (for color/font/image)
+        this.selectedBlock = null;
+        this.selectedElement = null;
 
-        // DOM Elements
+        // --- DOM ELEMENTS ---
         this.modal = document.getElementById('templateModal');
         this.grid = document.getElementById('templateGrid');
         this.closeBtn = document.querySelector('.close-btn');
-        
-        // Panel Sections
-        this.panel = document.getElementById('propertiesPanel'); // Main Panel
-        this.imageControls = document.getElementById('imageControls');
-        this.textControls = document.getElementById('textControls'); 
+        this.panel = document.getElementById('propertiesPanel'); 
 
-        // Inputs
+        // --- CONTROLS SECTIONS ---
+        this.textControls = document.getElementById('textControls'); 
+        this.imageControls = document.getElementById('imageControls');
+        this.mapControls = document.getElementById('mapControls');
+        this.musicControls = document.getElementById('musicControls');
+        this.commonControls = document.getElementById('commonControls');
+
+        // --- INPUTS ---
+        // Text
+        this.colorInput = document.getElementById('colorInput');
+        this.fontSizeInput = document.getElementById('fontSizeInput');
+        this.colorVal = document.getElementById('colorValue');
+        
+        // Box
+        this.bgColorInput = document.getElementById('bgColorInput');
+        this.paddingInput = document.getElementById('paddingInput');
+        this.bgVal = document.getElementById('bgColorValue');
+        this.deleteBtn = document.getElementById('deleteBlockBtn');
+
+        // Image
         this.imageInput = document.getElementById('imageInput');
         this.imgWidthInput = document.getElementById('imgWidthInput');
         this.imgRadiusInput = document.getElementById('imgRadiusInput');
 
-        this.colorInput = document.getElementById('colorInput');
-        this.bgColorInput = document.getElementById('bgColorInput');
-        this.paddingInput = document.getElementById('paddingInput');
-        this.fontSizeInput = document.getElementById('fontSizeInput');
-        this.deleteBtn = document.getElementById('deleteBlockBtn');
-        
-        this.colorVal = document.getElementById('colorValue');
-        this.bgVal = document.getElementById('bgColorValue');
+        // Map
+        this.mapAddressInput = document.getElementById('mapAddressInput');
+        this.updateMapBtn = document.getElementById('updateMapBtn');
+        this.mapLinkInput = document.getElementById('mapLinkInput');
+        this.extractMapBtn = document.getElementById('extractMapBtn');
 
-        this.commonControls = document.getElementById('commonControls');
+        // Music
+        this.musicInput = document.getElementById('musicInput');
+        this.musicUrlInput = document.getElementById('musicUrlInput');
+        this.currentMusicData = ""; 
+
+        // Reorder
         this.moveUpBtn = document.getElementById('moveUpBtn');
         this.moveDownBtn = document.getElementById('moveDownBtn');
 
-        // NEW: Save Modal Elements
+        // Save Modal
         this.saveModal = document.getElementById('saveModal');
         this.shareUrlInput = document.getElementById('shareUrlInput');
         this.copyLinkBtn = document.getElementById('copyLinkBtn');
         this.openLinkBtn = document.getElementById('openLinkBtn');
 
-        this.mapControls = document.getElementById('mapControls');
-        this.mapAddressInput = document.getElementById('mapAddressInput');
-        this.updateMapBtn = document.getElementById('updateMapBtn');
-
-        // NEW: Elements for Link Extraction
-        this.mapLinkInput = document.getElementById('mapLinkInput');
-        this.extractMapBtn = document.getElementById('extractMapBtn');
+        // NEW: Background Controls
+        this.bgImageInput = document.getElementById('bgImageInput');
+        this.parallaxCheckbox = document.getElementById('parallaxCheckbox');
+        this.removeBgImgBtn = document.getElementById('removeBgImgBtn');
     }
 
     init() {
         this.closeBtn.onclick = () => this.closeModal();
         window.onclick = (e) => { if (e.target == this.modal) this.closeModal(); };
 
-        // NEW: Copy Link Logic
-        this.copyLinkBtn.onclick = () => {
-            this.shareUrlInput.select();
-            document.execCommand('copy');
-            this.copyLinkBtn.innerText = '✅ Copied!';
-            setTimeout(() => this.copyLinkBtn.innerText = '📋 Copy', 2000);
-        };
-
-        // --- SELECTION LISTENER ---
+        // SELECTION LISTENER
         this.canvas.setSelectionListener((block, element) => {
             this.selectedBlock = block;
             this.selectedElement = element;
             this.updatePanelValues(); 
         });
 
+        // --- MUSIC LOGIC ---
+        if (this.musicInput) {
+            this.musicInput.onchange = (e) => {
+                const file = e.target.files[0];
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = (event) => {
+                        this.currentMusicData = event.target.result;
+                        alert("Music loaded! Don't forget to Save.");
+                    };
+                    reader.readAsDataURL(file);
+                }
+            };
+        }
+        if (this.musicUrlInput) {
+            this.musicUrlInput.oninput = (e) => {
+                this.currentMusicData = e.target.value;
+            };
+        }
+
         // --- IMAGE LOGIC ---
         this.imageInput.onchange = (e) => {
             const file = e.target.files[0];
-            if (file && this.selectedElement && this.selectedElement.tagName === 'IMG') {
+            if (file && this.selectedElement?.tagName === 'IMG') {
                 const reader = new FileReader();
-                reader.onload = (event) => {
-                    this.selectedElement.src = event.target.result; 
-                };
+                reader.onload = (event) => { this.selectedElement.src = event.target.result; };
                 reader.readAsDataURL(file);
             }
         };
-
         this.imgWidthInput.oninput = (e) => {
-            if (this.selectedElement && this.selectedElement.tagName === 'IMG') {
-                this.selectedElement.style.width = e.target.value + '%';
-            }
+            if (this.selectedElement?.tagName === 'IMG') this.selectedElement.style.width = e.target.value + '%';
         };
-        
         this.imgRadiusInput.oninput = (e) => {
-            if (this.selectedElement && this.selectedElement.tagName === 'IMG') {
-                this.selectedElement.style.borderRadius = e.target.value + '%';
-            }
+            if (this.selectedElement?.tagName === 'IMG') this.selectedElement.style.borderRadius = e.target.value + '%';
         };
 
-        // --- TEXT & BOX LOGIC ---
-        this.colorInput.oninput = (e) => {
-            if (this.selectedElement) {
-                this.selectedElement.style.color = e.target.value;
-                this.colorVal.innerText = e.target.value;
-            }
-        };
-
-        this.fontSizeInput.onchange = (e) => {
-            if (this.selectedElement) this.selectedElement.style.fontSize = e.target.value;
-        };
-
-        document.querySelectorAll('.align-btn').forEach(btn => {
-            btn.onclick = () => {
-                if (this.selectedElement) this.selectedElement.style.textAlign = btn.dataset.align;
-            };
-        });
-
-        this.bgColorInput.oninput = (e) => {
-            if (this.selectedBlock) {
-                this.selectedBlock.style.backgroundColor = e.target.value;
-                this.bgVal.innerText = e.target.value;
-            }
-        };
-
-        this.paddingInput.oninput = (e) => {
-            if (this.selectedBlock) this.selectedBlock.style.padding = e.target.value + 'px';
-        };
-
-        // 🟢 FIXED DELETE LOGIC HERE 🟢
-        this.deleteBtn.onclick = () => {
-            if (confirm("Delete this block?")) {
-                this.canvas.deleteSelected();
-                
-                // 1. Reset Selection
-                this.selectedBlock = null;
-                this.selectedElement = null;
-
-                // 2. Hide the CONTROLS, but NOT the PANEL
-                this.imageControls.style.display = 'none';
-                this.textControls.style.display = 'none';
-                
-                // 3. Ensure panel stays visible (it's a flex container in CSS)
-                // We don't set display='none' on this.panel anymore!
-            }
-        };
-
-        this.moveUpBtn.onclick = () => {
-            if (this.selectedBlock) this.canvas.moveBlockUp(this.selectedBlock);
-        };
-
-        this.moveDownBtn.onclick = () => {
-            if (this.selectedBlock) this.canvas.moveBlockDown(this.selectedBlock);
-        };
-
-        // MAP LOGIC
+        // --- MAP LOGIC ---
         this.updateMapBtn.onclick = () => {
             if (this.selectedBlock) {
                 const iframe = this.selectedBlock.querySelector('iframe.map-frame');
                 const btn = this.selectedBlock.querySelector('a.map-btn');
                 const address = this.mapAddressInput.value;
-
                 if (iframe && address) {
                     const embedUrl = `https://maps.google.com/maps?q=${encodeURIComponent(address)}&t=&z=13&ie=UTF8&iwloc=&output=embed`;
                     iframe.src = embedUrl;
@@ -166,72 +128,181 @@ export default class UIManager {
         this.extractMapBtn.onclick = () => {
             const link = this.mapLinkInput.value;
             if (!link) return alert("Please paste a Google Maps link first.");
-
-            // Regex to find coordinates like @-7.4073101,112.7563224
-            // It looks for the '@' symbol followed by numbers, comma, numbers
             const coordsMatch = link.match(/@([-0-9.]+),([-0-9.]+)/);
-
             if (coordsMatch && coordsMatch.length >= 3) {
-                const lat = coordsMatch[1];
-                const lng = coordsMatch[2];
-                const coords = `${lat},${lng}`;
-
+                const coords = `${coordsMatch[1]},${coordsMatch[2]}`;
                 if (this.selectedBlock) {
                     const iframe = this.selectedBlock.querySelector('iframe.map-frame');
                     const btn = this.selectedBlock.querySelector('a.map-btn');
-
-                    // Update using Coordinates instead of Address Text
                     const embedUrl = `https://maps.google.com/maps?q=${coords}&t=&z=15&ie=UTF8&iwloc=&output=embed`;
-
                     if (iframe) iframe.src = embedUrl;
-                    if (btn) btn.href = link; // Use the original link for the button
-
-                    // Also update the text input so user knows it worked
+                    if (btn) btn.href = link;
                     this.mapAddressInput.value = coords;
                     alert("Location extracted successfully!");
                 }
             } else {
-                alert("Could not find coordinates in that link. Please try a standard Google Maps link.");
+                alert("Could not find coordinates. Try a standard Google Maps link.");
+            }
+        };
+
+        // --- TEXT & BOX LOGIC ---
+        this.colorInput.oninput = (e) => { if (this.selectedElement) { this.selectedElement.style.color = e.target.value; this.colorVal.innerText = e.target.value; } };
+        this.fontSizeInput.onchange = (e) => { if (this.selectedElement) this.selectedElement.style.fontSize = e.target.value; };
+        this.bgColorInput.oninput = (e) => { if (this.selectedBlock) { this.selectedBlock.style.backgroundColor = e.target.value; this.bgVal.innerText = e.target.value; } };
+        this.paddingInput.oninput = (e) => { if (this.selectedBlock) this.selectedBlock.style.padding = e.target.value + 'px'; };
+        
+        document.querySelectorAll('.align-btn').forEach(btn => {
+            btn.onclick = () => { if (this.selectedElement) this.selectedElement.style.textAlign = btn.dataset.align; };
+        });
+
+        // --- COMMON TOOLS ---
+        this.moveUpBtn.onclick = () => { if (this.selectedBlock) this.canvas.moveBlockUp(this.selectedBlock); };
+        this.moveDownBtn.onclick = () => { if (this.selectedBlock) this.canvas.moveBlockDown(this.selectedBlock); };
+        
+        this.deleteBtn.onclick = () => {
+            if (confirm("Delete this block?")) {
+                this.canvas.deleteSelected();
+                this.selectedBlock = null;
+                this.selectedElement = null;
+                this.hideAllControls();
+            }
+        };
+
+        // --- SAVE MODAL ---
+        if (this.copyLinkBtn) {
+            this.copyLinkBtn.onclick = () => {
+                this.shareUrlInput.select();
+                document.execCommand('copy');
+                this.copyLinkBtn.innerText = '✅ Copied!';
+                setTimeout(() => this.copyLinkBtn.innerText = '📋 Copy', 2000);
+            };
+        }
+
+        // 🔴 NEW: Background Image Logic
+        this.bgImageInput.onchange = (e) => {
+            const file = e.target.files[0];
+            if (file && this.selectedBlock) {
+                const reader = new FileReader();
+                reader.onload = (event) => {
+                    // Set background image
+                    this.selectedBlock.style.backgroundImage = `url('${event.target.result}')`;
+                    this.selectedBlock.style.backgroundSize = 'cover';
+                    this.selectedBlock.style.backgroundPosition = 'center';
+
+                    // Force text to be white so it's readable
+                    this.selectedBlock.style.color = 'white';
+                    // Add a text shadow for better readability
+                    this.selectedBlock.style.textShadow = '0 2px 5px rgba(0,0,0,0.5)';
+                };
+                reader.readAsDataURL(file);
+            }
+        };
+
+        // 🔴 NEW: Parallax Toggle
+        this.parallaxCheckbox.onchange = (e) => {
+            if (this.selectedBlock) {
+                if (e.target.checked) {
+                    this.selectedBlock.classList.add('parallax-bg');
+                } else {
+                    this.selectedBlock.classList.remove('parallax-bg');
+                }
+            }
+        };
+
+        // 🔴 NEW: Remove Image
+        this.removeBgImgBtn.onclick = () => {
+            if (this.selectedBlock) {
+                this.selectedBlock.style.backgroundImage = '';
+                this.selectedBlock.classList.remove('parallax-bg');
+                this.parallaxCheckbox.checked = false;
+                this.bgImageInput.value = ''; // Reset input
             }
         };
     }
 
-    updatePanelValues() {
-        // Ensure panel is visible (useful if it was hidden initially)
-        // Note: In CSS it is 'display: flex', so we don't want to overwrite that with 'block' if possible, 
-        // but forcing it visible is okay.
-        if (this.panel.style.display === 'none') this.panel.style.display = 'flex';
+    // --- HELPER METHODS ---
 
-        if (!this.selectedElement) {
-            this.commonControls.style.display = 'none'; // Hide if nothing selected
+    openMusicSettings() {
+        this.hideAllControls();
+        if (this.musicControls) this.musicControls.style.display = 'block';
+        if (this.panel.style.display === 'none') this.panel.style.display = 'flex';
+    }
+
+    hideAllControls() {
+        if (this.textControls) this.textControls.style.display = 'none';
+        if (this.imageControls) this.imageControls.style.display = 'none';
+        if (this.mapControls) this.mapControls.style.display = 'none';
+        if (this.commonControls) this.commonControls.style.display = 'none';
+        if (this.musicControls) this.musicControls.style.display = 'none';
+    }
+
+    updatePanelValues() {
+        if (this.panel.style.display === 'none') this.panel.style.display = 'flex';
+        this.hideAllControls();
+        
+        // Always show reorder buttons if something is selected
+        if (this.selectedBlock) {
+            if (this.commonControls) this.commonControls.style.display = 'block';
+        }
+
+        if (!this.selectedElement) return;
+
+        // 1. Check for Map
+        if (this.selectedBlock && this.selectedBlock.querySelector('iframe.map-frame')) {
+            if (this.mapControls) {
+                this.mapControls.style.display = 'block';
+                // Try to extract address from URL
+                const iframe = this.selectedBlock.querySelector('iframe.map-frame');
+                try {
+                    if (iframe.src.includes('q=')) {
+                        const query = iframe.src.split('q=')[1].split('&')[0];
+                        this.mapAddressInput.value = decodeURIComponent(query);
+                    }
+                } catch(e) {}
+            }
             return;
         }
 
-        this.commonControls.style.display = 'block';
-
-        const tagName = this.selectedElement.tagName;
-
-        if (tagName === 'IMG') {
-            this.imageControls.style.display = 'block';
-            this.textControls.style.display = 'none';
-
+        // 2. Check for Image
+        if (this.selectedElement.tagName === 'IMG') {
+            if (this.imageControls) this.imageControls.style.display = 'block';
             this.imgWidthInput.value = parseInt(this.selectedElement.style.width) || 100;
             this.imgRadiusInput.value = parseInt(this.selectedElement.style.borderRadius) || 0;
-
-        } else {
-            this.imageControls.style.display = 'none';
-            this.textControls.style.display = 'block';
-
-            const style = window.getComputedStyle(this.selectedElement);
+            return;
         }
 
-        const mapFrame = this.selectedBlock.querySelector('iframe.map-frame');
+        // 3. Default: Text Controls
+        if (this.textControls) this.textControls.style.display = 'block';
+        
+        // Sync Inputs
+        const textStyle = window.getComputedStyle(this.selectedElement);
+        const boxStyle = window.getComputedStyle(this.selectedBlock);
 
-        if (mapFrame) {
-            this.mapControls.style.display = 'block';
+        // 🔴 NEW: Sync Checkbox state
+        if (this.selectedBlock.classList.contains('parallax-bg')) {
+            this.parallaxCheckbox.checked = true;
         } else {
-            this.mapControls.style.display = 'none';
+            this.parallaxCheckbox.checked = false;
         }
+        
+        // Helper: RGB to Hex
+        const rgbToHex = (rgb) => {
+            if (!rgb || rgb.indexOf('rgb') === -1) return '#000000';
+            const sep = rgb.indexOf(",") > -1 ? "," : " ";
+            const rgbArr = rgb.substr(4).split(")")[0].split(sep);
+            let r = (+rgbArr[0]).toString(16), g = (+rgbArr[1]).toString(16), b = (+rgbArr[2]).toString(16);
+            if (r.length == 1) r = "0" + r;
+            if (g.length == 1) g = "0" + g;
+            if (b.length == 1) b = "0" + b;
+            return "#" + r + g + b;
+        };
+
+        this.colorInput.value = rgbToHex(textStyle.color);
+        this.colorVal.innerText = this.colorInput.value;
+        this.bgColorInput.value = rgbToHex(boxStyle.backgroundColor);
+        this.bgVal.innerText = this.bgColorInput.value;
+        this.paddingInput.value = parseInt(boxStyle.padding) || 20;
+        this.fontSizeInput.value = textStyle.fontSize; 
     }
 
     openCategorySelector(category) {
@@ -252,26 +323,28 @@ export default class UIManager {
 
     async handleSave() {
         const html = this.canvas.getDesignHtml();
-        const theme = this.canvas.getTheme(); // Get the theme!
+        const theme = this.canvas.getTheme();
+        const music = this.currentMusicData;
 
-        // Send both to the server
-        const result = await this.network.saveDesign(html, theme);
+        const result = await this.network.saveDesign(html, theme, music);
         
         if (result.success) {
             const shareUrl = `${window.location.origin}/share/${result.id}?to=GuestName`;
-            this.shareUrlInput.value = shareUrl;
-            this.openLinkBtn.href = shareUrl;
-            this.saveModal.style.display = 'flex';
+            if (this.saveModal) {
+                this.shareUrlInput.value = shareUrl;
+                this.openLinkBtn.href = shareUrl;
+                this.saveModal.style.display = 'flex';
+            } else {
+                prompt("Saved!", shareUrl);
+            }
         } else {
             alert('Failed to save design.');
         }
     }
 
     closeModal() { this.modal.style.display = 'none'; }
-
+    
     togglePreview() {
         document.body.classList.toggle('preview-mode');
     }
-
-    
 }

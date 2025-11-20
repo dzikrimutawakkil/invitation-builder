@@ -362,3 +362,123 @@ h1, h2, h3 { font-family: var(--font-heading); }
     transform: translateY(-2px);
     opacity: 0.9;
 }
+
+/* =========================================
+   9. CINEMATIC MUSIC OPENER
+   ========================================= */
+
+/* The Full Screen Cover */
+#welcomeOverlay {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background-color: var(--bg-color); /* Matches the theme */
+    z-index: 9999; /* Sits on top of everything */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    transition: opacity 0.8s ease-out, visibility 0.8s;
+}
+
+/* The "Open" Button */
+.envelope-btn {
+    background: var(--primary-color);
+    color: white;
+    border: none;
+    padding: 15px 40px;
+    border-radius: 50px;
+    font-family: var(--font-heading);
+    font-size: 1.2em;
+    cursor: pointer;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+    animation: pulse 2s infinite;
+    margin-top: 30px;
+}
+
+@keyframes pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+    100% { transform: scale(1); }
+}
+
+/* Floating Music Toggle (Bottom Right) */
+#musicToggle {
+    position: fixed;
+    bottom: 20px; right: 20px;
+    width: 50px; height: 50px;
+    border-radius: 50%;
+    background: white;
+    color: #333;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 100;
+    cursor: pointer;
+    opacity: 0; /* Hidden until music starts */
+    transition: opacity 1s;
+    font-size: 1.5em;
+}
+
+.music-spin {
+    animation: spin 4s linear infinite;
+}
+
+@keyframes spin { 100% { transform: rotate(360deg); } }
+
+
+/* =========================================
+   10. SCROLL-TELLING ANIMATIONS (The Missing Piece)
+   ========================================= */
+
+/* 1. Standard Fade Up (Text & Buttons) */
+.block > * {
+    opacity: 0;
+    transform: translateY(30px); /* Start 30px lower */
+    transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+}
+
+/* When the JS adds 'in-view', animate to normal */
+.block.in-view > * {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* 2. Stagger Effect (Elements appear one by one) */
+.block.in-view > *:nth-child(1) { transition-delay: 0.1s; }
+.block.in-view > *:nth-child(2) { transition-delay: 0.3s; }
+.block.in-view > *:nth-child(3) { transition-delay: 0.5s; }
+.block.in-view > *:nth-child(4) { transition-delay: 0.7s; }
+
+/* 3. Cinematic Image Zoom (Ken Burns Effect) */
+.block img {
+    transform: scale(1.1); /* Start slightly zoomed in */
+    transition: transform 1.5s ease-out, opacity 1s ease-out;
+}
+.block.in-view img {
+    transform: scale(1); /* Zoom out to normal */
+    opacity: 1;
+}
+
+/* =========================================
+   11. PARALLAX UTILITY CLASS
+   ========================================= */
+.parallax-bg {
+    /* The magic property: Background stays fixed while content scrolls */
+    background-attachment: fixed !important;
+    background-position: center !important;
+    background-repeat: no-repeat !important;
+    background-size: cover !important;
+    
+    /* Optional: Add a dark overlay tint via linear-gradient */
+    /* This ensures text is readable on bright photos */
+    background-blend-mode: multiply;
+    background-color: rgba(0, 0, 0, 0.4) !important; 
+}
+
+/* Important: Disable parallax on mobile if it causes jitter (Optional) */
+@media (hover: none) {
+    /* Some mobile browsers struggle with 'fixed', but modern ones are okay. */
+    /* .parallax-bg { background-attachment: scroll !important; } */
+}
