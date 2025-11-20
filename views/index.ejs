@@ -11,6 +11,15 @@
 
     <div class="sidebar">
         <h3>💍 Invitation Builder</h3>
+
+        <div class="section-title">Global Theme</div>
+        <select id="themeSelector" onchange="changeTheme(this.value)" style="margin-bottom: 20px; padding: 10px; width: 100%;">
+            <option value="">⚪ Default (None)</option>
+            <option value="modern">🟦 Modern Navy</option>
+            <option value="elegant">✨ Elegant Gold</option>
+            <option value="ocean">🌊 Ocean Blue</option>
+        </select>
+
         <div class="section-title">Structure</div>
         
         <button class="tool-btn" onclick="openSelector('hero')">Header Styles</button>

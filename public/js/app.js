@@ -19,3 +19,9 @@ window.openSelector = (category) => ui.openCategorySelector(category);
 window.saveWork = () => ui.handleSave();
 
 window.togglePreview = () => ui.togglePreview();
+
+window.changeTheme = (themeName) => {
+    const canvas = document.getElementById('canvas');
+    // We set the attribute on the Canvas so only the phone changes color
+    canvas.setAttribute('data-theme', themeName);
+};
