@@ -14,6 +14,34 @@ export default class CanvasManager {
                 this.selectBlock(block, target);
             }
         });
+        this.initScrollObserver();
+    }
+
+    initScrollObserver() {
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('in-view');
+                }
+            });
+        }, { 
+            root: this.canvas, // Important: Watch scrolling inside the Phone Canvas
+            threshold: 0.2 
+        });
+
+        // Observer needs to watch existing blocks AND new ones
+        // We use a MutationObserver to detect when you add a NEW block
+        const mutationObserver = new MutationObserver((mutations) => {
+            mutations.forEach((mutation) => {
+                mutation.addedNodes.forEach((node) => {
+                    if (node.classList && node.classList.contains('block')) {
+                        observer.observe(node);
+                    }
+                });
+            });
+        });
+
+        mutationObserver.observe(this.canvas, { childList: true });
     }
 
     setSelectionListener(callback) {

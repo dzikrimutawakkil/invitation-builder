@@ -387,3 +387,13 @@ body.preview-mode .block {
 body.preview-mode #exitPreviewBtn {
     display: block;
 }
+
+/* --- ANIMATION OVERRIDE FOR EDITOR --- */
+/* While editing (NOT in preview mode), force everything to be visible.
+   We only want animations to happen in "Live Preview" or the Real Website.
+*/
+body:not(.preview-mode) .block > * {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
+}

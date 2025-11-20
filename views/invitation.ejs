@@ -62,5 +62,25 @@
             <%- content %>
         </div>
     </div>
+<script>
+        // SCROLL OBSERVER: Detects when a block enters the screen
+        document.addEventListener("DOMContentLoaded", () => {
+            const blocks = document.querySelectorAll('.block');
+
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    // If more than 20% of the block is visible
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('in-view');
+                    } else {
+                        // Optional: Remove class to re-animate when scrolling back up
+                        // entry.target.classList.remove('in-view'); 
+                    }
+                });
+            }, { threshold: 0.2 });
+
+            blocks.forEach(block => observer.observe(block));
+        });
+    </script>
 </body>
 </html>
