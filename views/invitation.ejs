@@ -4,14 +4,17 @@
     <%- include('partials/head') %>
     <link rel="stylesheet" href="/css/theme.css">
     <style>
-        /* Small override just for the mobile viewer presentation */
-        body { background: #333; display: flex; justify-content: center; min-height: 100vh; }
-        .mobile-container { width: 100%; max-width: 400px; background: white; min-height: 100vh; box-shadow: 0 0 20px rgba(0,0,0,0.5); }
+        /* Basic Layout Only - Everything else is in theme.css */
+        body { background: #333; display: flex; justify-content: center; min-height: 100vh; margin: 0; padding: 20px 0; }
+        .mobile-container { width: 100%; max-width: 400px; background: white; min-height: 100vh; box-shadow: 0 0 20px rgba(0,0,0,0.5); display: flex; flex-direction: column; }
+        .design-content { flex: 1; }
     </style>
 </head>
 <body>
     <div class="mobile-container">
-        <%- content %>
+        <div class="design-content">
+            <%- content %>
+        </div>
     </div>
 </body>
 </html>

@@ -4,6 +4,7 @@ import TextTemplates from './templates/TextTemplates.js';
 import DetailsTemplates from './templates/DetailsTemplates.js';
 import GuestTemplates from './templates/GuestTemplates.js';
 import ImageTemplates from './templates/ImageTemplates.js';
+import RsvpTemplates from './templates/RsvpConfirmationTemplates.js';
 
 export default class TemplateLibrary {
     constructor() {
@@ -13,7 +14,8 @@ export default class TemplateLibrary {
             text: TextTemplates,
             details: DetailsTemplates,
             guest: GuestTemplates,
-            image: ImageTemplates
+            image: ImageTemplates,
+            rsvp: RsvpTemplates
         };
     }
 

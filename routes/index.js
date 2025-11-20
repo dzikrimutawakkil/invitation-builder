@@ -28,4 +28,7 @@ router.post('/save-design', invitationController.saveDesign);
 // 4. Share View
 router.get('/share/:id', invitationController.renderInvitation);
 
+// Ensure this matches the method name 'submitRSVP'
+router.post('/rsvp/:id', invitationController.submitRSVP);
+
 module.exports = router;

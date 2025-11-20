@@ -116,3 +116,60 @@ h1, h2, h3 { font-family: var(--font-heading); }
     margin: 10px;
     border-radius: var(--border-radius);
 }
+
+/* --- RSVP BLOCK STYLES --- */
+.rsvp-section {
+    background: var(--bg-color); /* Adapts to theme! */
+    border: 1px solid var(--primary-color);
+    padding: 25px 20px;
+    margin: 10px;
+    border-radius: var(--border-radius);
+}
+
+.rsvp-title { 
+    text-align: center; 
+    font-family: var(--font-heading); 
+    color: var(--text-color); 
+    margin: 0 0 15px 0; 
+    font-size: 1.2em; letter-spacing: 1px;
+}
+
+.rsvp-form input, .rsvp-form select, .rsvp-form textarea {
+    width: 100%; padding: 12px; margin-bottom: 10px;
+    border: 1px solid #ccc; border-radius: 4px;
+    box-sizing: border-box; 
+    font-family: var(--font-body); 
+    font-size: 0.95em;
+}
+
+.rsvp-btn {
+    width: 100%; padding: 12px; 
+    background: var(--primary-color); 
+    color: white;
+    border: none; border-radius: 4px; 
+    font-weight: bold; cursor: pointer; font-size: 1em;
+    transition: opacity 0.2s;
+}
+.rsvp-btn:hover { opacity: 0.9; }
+
+/* Message Board */
+.message-board { margin-top: 30px; }
+.msg-card {
+    background: white; 
+    border-radius: 4px; padding: 15px;
+    margin-bottom: 12px; box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    border-left: 4px solid #ddd;
+    color: #333; /* Force dark text for readability on cards */
+}
+
+.msg-card.status-yes { border-left-color: #27ae60; }
+.msg-card.status-no { border-left-color: #c0392b; }
+
+.msg-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; }
+.msg-name { font-weight: bold; font-size: 0.95em; }
+
+.badge { font-size: 0.75em; padding: 3px 8px; border-radius: 12px; color: white; text-transform: uppercase; font-weight: bold; }
+.bg-yes { background: #27ae60; }
+.bg-no { background: #c0392b; }
+
+.msg-text { font-style: italic; color: #555; line-height: 1.4; font-size: 0.9em; }
